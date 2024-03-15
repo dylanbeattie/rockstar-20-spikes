@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Pegasus" Version="4.2.0-alpha0009" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PegGrammar Include="example.peg" />
   </ItemGroup>
 
 </Project>
