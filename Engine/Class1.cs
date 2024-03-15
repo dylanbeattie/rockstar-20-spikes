@@ -1,6 +1,7 @@
-﻿namespace Engine;
+namespace Engine;
 
-public class Class1
-{
-
+public class Engine {
+	public string Run(string program) {
+		return $"{program} It worked - ran {program.Length} characters at {DateTime.UtcNow:O}";
+	}
 }

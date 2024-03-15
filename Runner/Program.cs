@@ -1,2 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+var program = File.ReadAllText(args[0]);
+var engine = new Engine.Engine();
+var result = engine.Run(program);
+Console.WriteLine(result);
