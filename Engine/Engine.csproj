@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Pegasus" Version="4.2.0-alpha0009" />
+  </ItemGroup>
+
 </Project>
