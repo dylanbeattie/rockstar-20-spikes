@@ -14,7 +14,7 @@ multiplicative <Node> -memoize
     / power
 
 power <Node>
-    = left:primary "^" right:power { new Pow(left, right) }
+    = left:primary "^" right:power { new Pow(right, right) }
     / primary
 
 primary <Node> -memoize

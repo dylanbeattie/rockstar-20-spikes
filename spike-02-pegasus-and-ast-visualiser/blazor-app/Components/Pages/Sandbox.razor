@@ -1,0 +1,23 @@
+@page "/"
+@rendermode InteractiveServer
+
+@using engine
+
+<PageTitle>Sandbox</PageTitle>
+
+<label for="program">Program:</label>
+<br />
+<InputTextArea @bind-Value="@program" rows="4" id="program"></InputTextArea>
+
+<hr />
+<button class="btn btn-primary" @onclick="RunProgram">Run!</button><br />
+<textarea rows="40" cols="72">@result</textarea>
+
+@code {
+	private string program = "1+2/3*4^5+(6/7/8)";
+	private string result = "nothing happened yet.";
+	private void RunProgram()
+	{
+		result = Parser.Parse(program).ToString();
+	}
+}
