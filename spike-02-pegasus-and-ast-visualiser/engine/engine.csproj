@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="rockstar.peg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pegasus" Version="4.2.0-alpha0009" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PegGrammar Include="rockstar.peg" />
+  </ItemGroup>
+
+</Project>

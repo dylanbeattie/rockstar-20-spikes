@@ -1,0 +1,27 @@
+@namespace PegExamples
+@classname ExpressionParser
+@using System.Globalization
+@using engine;
+	
+additive <Node> -memoize
+    = left:additive "+" right:multiplicative { new Add(left, right) }
+    / left:additive "-" right:multiplicative { new Sub(left, right) }
+    / multiplicative
+
+multiplicative <Node> -memoize
+    = left:multiplicative "*" right:power { new Mul(left, right) }
+    / left:multiplicative "/" right:power { new Div(left, right) }
+    / power
+
+power <Node>
+    = left:primary "^" right:power { new Pow(left, right) }
+    / primary
+
+primary <Node> -memoize
+    = decimal
+    /* / "-" primary:primary { -primary } */
+    / "(" additive:additive ")" { additive }
+	
+decimal <Num>
+    = value:([0-9]+ ("." [0-9]+)?) {
+		new Num(decimal.Parse(value)) }
