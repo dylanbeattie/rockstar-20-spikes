@@ -14,7 +14,7 @@ public abstract class Node {
 	public override string ToString() => this.ToString("");
 
 	public virtual string ToString(string indent)
-		=> indent + " - " + this.GetType().Name;
+		=> indent + " - LOOK " + this.GetType().Name;
 }
 
 public class BinaryOp(Node left, Node right) : Node {

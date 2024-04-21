@@ -10,14 +10,34 @@
 <InputTextArea @bind-Value="@program" rows="4" id="program"></InputTextArea>
 
 <hr />
-<button class="btn btn-primary" @onclick="RunProgram">Run!</button><br />
+<button class="btn btn-primary" @onclick="RunProgram">Run!</button>
+<br />
 <textarea rows="40" cols="72">@result</textarea>
 
 @code {
 	private string program = "1+2/3*4^5+(6/7/8)";
 	private string result = "nothing happened yet.";
-	private void RunProgram()
+	protected override void OnInitialized() // = On Page Load
 	{
-		result = Parser.Parse(program).ToString();
+		RunProgram();
+
 	}
+
+	protected override void OnParametersSet() {
+		base.OnParametersSet();
+		RunProgram("OnParametersSet");
+	}
+
+	protected override void OnAfterRender(bool firstRender) {
+		base.OnAfterRender(firstRender);
+		RunProgram("OnAfterRender");
+	}
+
+	private void RunProgram() => RunProgram("button");
+	private void RunProgram(string trigger)
+	{
+		result = trigger + "\n\n" + Parser.Parse(program).ToString();
+	}
+
+
 }
