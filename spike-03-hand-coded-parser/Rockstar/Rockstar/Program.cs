@@ -7,7 +7,7 @@ public class Rockstar {
 				Environment.Exit(64);
 				break;
 			case 1:
-				RunFile(args[1]);
+				RunFile(args[0]);
 				break;
 			default:
 				RunPrompt();
