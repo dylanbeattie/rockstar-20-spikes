@@ -23,6 +23,7 @@
 		<Watch Include="*.cshtml" />
 		<Watch Include="*.cs" />
 		<Watch Include="*.peg" />
+		<Watch Include="..\engine\rockstar.peg" />
 	</ItemGroup>
 	<ItemGroup>
 	  <PegGrammar Include="..\engine\rockstar.peg" Link="rockstar.peg" />

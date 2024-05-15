@@ -22,4 +22,6 @@ primary <double> -memoize
     / "(" additive:additive ")" { additive }
 
 decimal <double>
-    = value:([0-9]+ ("." [0-9]+)?) { double.Parse(value, CultureInfo.InvariantCulture) }
+    = value:([0-9]+ ("." [0-9]+)?) { 
+        1.2 * double.Parse(value, CultureInfo.InvariantCulture) 
+    }

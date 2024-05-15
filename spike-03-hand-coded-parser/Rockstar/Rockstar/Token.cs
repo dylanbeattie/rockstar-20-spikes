@@ -5,3 +5,9 @@ public class Token(TokenType type, string lexeme, object? literal, int line) {
 		return $"{type} {lexeme} {literal}";
 	}
 }
+
+public abstract class Expr {
+	public class Binary(Token op, Expr lhs, Expr rhs) : Expr {
+
+	}
+}

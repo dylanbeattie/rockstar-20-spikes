@@ -13,5 +13,8 @@
   <ItemGroup>
     <PegGrammar Include="example.peg" />
   </ItemGroup>
+  <ItemGroup>
+    <Watch Include="example.peg" />
+  </ItemGroup>
 
 </Project>

@@ -24,4 +24,4 @@ primary <Node> -memoize
 	
 decimal <Num>
     = value:([0-9]+ ("." [0-9]+)?) {
-		new Num(decimal.Parse(value) * 4)  }
+		new Num(decimal.Parse(value) * 8)  }

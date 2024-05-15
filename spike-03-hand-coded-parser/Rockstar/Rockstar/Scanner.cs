@@ -77,7 +77,7 @@ public class Scanner(string source) {
 		} else {
 			Next();
 		}
-		var literal = source.Substring(start + 1, current - 1);
+		var literal = source[start..current].Trim('"');
 		return Token(TokenType.STRING, literal);
 	}
 
