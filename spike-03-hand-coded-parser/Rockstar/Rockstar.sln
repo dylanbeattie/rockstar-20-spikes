@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rockstar", "Rockstar\Rockstar.csproj", "{A0A8FF32-5AB0-45CA-A822-B7A9D9AB4FCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rockstar", "Rockstar\Rockstar.csproj", "{A0A8FF32-5AB0-45CA-A822-B7A9D9AB4FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rockstar.Generator", "Rockstar.Generator\Rockstar.Generator.csproj", "{A5919A51-88EB-44F0-B40F-F2FE0E5D0AA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A0A8FF32-5AB0-45CA-A822-B7A9D9AB4FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0A8FF32-5AB0-45CA-A822-B7A9D9AB4FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0A8FF32-5AB0-45CA-A822-B7A9D9AB4FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5919A51-88EB-44F0-B40F-F2FE0E5D0AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5919A51-88EB-44F0-B40F-F2FE0E5D0AA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5919A51-88EB-44F0-B40F-F2FE0E5D0AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5919A51-88EB-44F0-B40F-F2FE0E5D0AA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

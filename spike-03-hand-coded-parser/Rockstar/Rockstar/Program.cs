@@ -1,13 +1,18 @@
+namespace Rockstar;
 
-public class Rockstar {
+public class Program {
 	public static void Main(string[] args) {
+		GeneratedClass.GeneratedMethod();
+		var b = new BumbleClass("horse");
+		b.Method();
+
 		switch (args.Length) {
 			case > 1:
 				Console.WriteLine("Usage: rockstar <program.rock>");
 				Environment.Exit(64);
 				break;
 			case 1:
-				RunFile(args[0]);
+				RunFile(args[1]);
 				break;
 			default:
 				RunPrompt();
@@ -20,7 +25,6 @@ public class Rockstar {
 		Run(contents);
 		if (hadError) Environment.Exit(65);
 	}
-
 
 	private static void RunPrompt() {
 		while (true) {
@@ -37,9 +41,7 @@ public class Rockstar {
 		foreach (var token in tokens) Console.WriteLine(token);
 	}
 
-	public static void Error(int line, string message) {
-		Report(line, "", message);
-	}
+	public static void Error(int line, string message) => Report(line, "", message);
 
 	private static bool hadError = false;
 

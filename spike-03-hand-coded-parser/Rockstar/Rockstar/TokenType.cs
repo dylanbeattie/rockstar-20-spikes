@@ -1,17 +1,17 @@
+namespace Rockstar;
 
 public enum TokenType {
-	PRINT, NUMBER, PLUS,
-
-	TIMES, MINUS, DIVIDE, EOF,
-	EQUALS,
-	DOUBLE_EQUALS,
-	LESS_THAN,
-	LESS_THAN_EQUALS,
-	GREATER_THAN,
-	GREATER_THAN_EQUALS,
-	UNARY_NOT,
-	NOT_EQUAL,
-	SLASH,
-	STRING,
-	IDENTIFIER,
+	Identifier = 0,
+	Print, Number, Plus,
+	Times, Minus, Divide, Eof,
+	Equals,
+	DoubleEquals,
+	LessThan,
+	LessThanEquals,
+	GreaterThan,
+	GreaterThanEquals,
+	UnaryNot,
+	NotEqual,
+	Slash,
+	String,
 }
