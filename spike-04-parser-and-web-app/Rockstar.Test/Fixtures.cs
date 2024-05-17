@@ -19,7 +19,7 @@ namespace Rockstar.Test {
 		public void RunFile(string filePath) {
 			var source = File.ReadAllText(filePath);
 			var expect = ExtractExpects(source);
-			var scanner = new Scanner(source);
+			var scanner = new Scanner(source, (_, _) => { });
 			var parser = new Parser();
 			var ast = parser.Parse(scanner.Tokens);
 			var env = new TestEnvironment();

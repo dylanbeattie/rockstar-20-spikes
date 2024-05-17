@@ -1,8 +1,6 @@
 namespace Rockstar;
 
 public static class Program {
-	private static bool hadError = false;
-
 	public static void Main(string[] args) {
 		var env = new ConsoleEnvironment();
 		switch (args.Length) {
@@ -36,42 +34,19 @@ public static class Program {
 	}
 
 	static void Run(string source, IAmARockstarEnvironment env) {
-		var scanner = new Scanner(source);
+		var scanner = new Scanner(source, Error);
 		var parser = new Parser();
 		var abstractSyntaxTree = parser.Parse(scanner.Tokens);
 		var interpreter = new Interpreter(env);
 		interpreter.Run(abstractSyntaxTree);
 	}
-}
 
-public class Scanner(string source)  {
-	public IEnumerable<Token> Tokens {
-		get { yield return new(TokenType.Default); }
+	public static void Error(int line, string message) => Report(line, "", message);
+
+	private static bool hadError = false;
+
+	private static void Report(int line, string where, string message) {
+		Console.Error.WriteLine($"[line {line}] Error{where}: {message}");
+		hadError = true;
 	}
-}
-
-public class Expr;
-
-public class Parser {
-	public Expr Parse(IEnumerable<Token> tokens) => new();
-}
-
-public interface IAmARockstarEnvironment {
-	string? ReadInput();
-	void WriteOutput(string output);
-}
-
-public class ConsoleEnvironment : IAmARockstarEnvironment {
-	public string? ReadInput() => Console.ReadLine();
-	public void WriteOutput(string output) => Console.WriteLine(output);
-}
-
-public class Interpreter(IAmARockstarEnvironment env) {
-	public int Run(Expr expr) => 0;
-}
-
-public class Token(TokenType type);
-
-public enum TokenType {
-	Default
 }
