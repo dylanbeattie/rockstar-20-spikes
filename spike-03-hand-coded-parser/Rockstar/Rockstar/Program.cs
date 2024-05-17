@@ -2,17 +2,16 @@ namespace Rockstar;
 
 public class Program {
 	public static void Main(string[] args) {
-		var expr = new ExprNode.BinaryNode(
-			new ExprNode.UnaryNode(
+		var expr = new Expr.Binary(
+			new Expr.Unary(
 				new Token(TokenType.Minus, "-", null, 1),
-				new ExprNode.NumberNode(123)),
+				new Expr.Literal(123)),
 			new Token(TokenType.Times, "*", null, 1),
-			new ExprNode.GroupingNode(
-				new ExprNode.NumberNode(45.67m)));
-
+			new Expr.Grouping(
+				new Expr.Literal(45.67m)));
 		Console.WriteLine(new AstPrinter().Print(expr));
-			
 	}
+
 	public static void Brain(string[] args) {
 		switch (args.Length) {
 			case > 1:

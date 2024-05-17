@@ -16,4 +16,8 @@ public enum TokenType {
 	NotEqual,
 	Slash,
 	String,
+	False,
+	True,
+	Nil,
+	LEFT_PAREN
 }
