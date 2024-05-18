@@ -51,14 +51,14 @@ public class Parser(IList<Token> tokens) {
 		return new Statement.Expression(Expression());
 	}
 
-	public Expr Expression() {
-		return Literal();
-	}
+	public Expr Expression() => Match(TokenType.Minus) ? Unary() : Literal();
+
+	public Expr Unary() => new Expr.Unary(TokenType.Minus, Literal());
 
 	public Expr Literal() {
 		if (Match(TokenType.String)) return new Expr.String(Previous().Literal!.ToString()!);
-		throw new Exception("OOPS");
+		if (Match(TokenType.Number)) return new Expr.Number((decimal) Previous().Literal!);
+		throw new NotImplementedException();
 	}
-
 }
 

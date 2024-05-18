@@ -36,7 +36,9 @@ public class Scanner(string source, Action<int, string> error) {
 				line++;
 				return null;
 			case '"': return ScanString();
+			case '-': return Token(TokenType.Minus);
 			default:
+				if (c.IsDigit()) return ScanNumber();
 				if (c.IsAlpha()) return ScanIdentifier();
 				error(line, "Unexpected character");
 				return null;
@@ -69,6 +71,16 @@ public class Scanner(string source, Action<int, string> error) {
 		return Token(TokenType.String, literal);
 	}
 
+	private Token ScanNumber() {
+		while (Peek.IsDigit()) Next();
+		if (Peek == '.') {
+			Next();
+			while (Peek.IsDigit()) Next();
+		}
+		var number = Decimal.Parse(source[start..current]);
+		return Token(TokenType.Number, number);
+	}
+
 
 	private char Next() => source[current++];
 
@@ -90,6 +102,7 @@ public class Scanner(string source, Action<int, string> error) {
 	private static readonly Dictionary<TokenType, string[]> keywords = new() {
 		{ TokenType.Output, ["shout", "say", "whisper", "scream"] }
 	};
+
 
 	private Token ScanIdentifier() {
 		while (Peek.IsAlphaNumeric()) Next();

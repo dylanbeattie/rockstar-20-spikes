@@ -6,7 +6,7 @@ namespace Rockstar.Test;
 public class TestCaseTest {
 	[Fact]
 	public void ExpectationExtractorExtractsExpectation() {
-		var expect = Fixtures.ExtractExpects("""
+		var expect = FixtureBase.ExtractExpects("""
 		                                     shout "hello" (expect: hello\n)
 		                                     shout "world" (expect: world\n)
 		                                     """);

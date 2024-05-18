@@ -10,17 +10,22 @@ public class Interpreter(IAmARockstarEnvironment env) : IVisitor<object?> {
 		=> statement.Accept(this);
 
 	public object? Visit(Expr.String expr) => expr.Value;
+	public object? Visit(Expr.Number expr) => expr.Value;
 
 	public object? Visit(Statement.Output stmt) {
-		var value = Evaluate(stmt.Expr);
+		var value = Visit(stmt.Expr);
 		env.WriteLine(value?.ToString() ?? "null");
 		return null;
 	}
 
-	public object? Evaluate(Expr expr) => expr.Accept(this);
-
 	public object? Visit(Statement.Expression expr)
 		=> Visit(expr.Expr);
+
+	public object? Visit(Expr.Unary expr) {
+		var value = Visit(expr.Expr);
+		if (expr.Type == TokenType.Minus) return -(decimal)value!;
+		throw new NotImplementedException();
+	}
 
 	private object? Visit(Expr exprExpr)
 		=> exprExpr.Accept(this);

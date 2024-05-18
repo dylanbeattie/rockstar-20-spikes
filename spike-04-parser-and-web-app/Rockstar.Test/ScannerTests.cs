@@ -2,7 +2,7 @@ using Shouldly;
 
 namespace Rockstar.Test;
 
-public class ScannerTests {
+public class AmazingScannerTests {
 	private static void Error(int line, string error) => throw new($"{line}: {error}");
 
 	[Theory]
@@ -14,10 +14,7 @@ public class ScannerTests {
 		tokens[0].Type.ShouldBe(TokenType.Eof);
 	}
 	[Theory]
-	[InlineData("""
-
-
-	            """)]
+	[InlineData(" \n \n \n")]
 	[InlineData(" ")]
 	[InlineData("\n\n\t\r\n")]
 	public void ScannerIgnoresNewlinesAndWhitespace(string source) {
@@ -35,16 +32,29 @@ public class ScannerTests {
 	}
 
 	[Theory]
-	[InlineData("""
-
-	            "bar
-	            baz"
-
-	            """, 3)]
+	[InlineData("\n\"bar\nbaz\"\n", 3)]
 	public void ScannerMatchesMultilineStrings(string source, int lineNumber) {
 		var tokens = new Scanner(source, Error).Tokens.ToList();
 		tokens.Select(t => t.Type).ShouldBe([TokenType.String, TokenType.Eof]);
 		tokens.Select(t => t.Line).ShouldBe([3,4]);
+	}
+
+	[Theory]
+	[InlineData("0")]
+	[InlineData("1")]
+	[InlineData("123.45")]
+	public void ScannerMatchesNumberLiterals(string source) {
+		var tokens = new Scanner(source, Error).Tokens.ToList();
+		tokens.Select(t => t.Type).ShouldBe([TokenType.Number, TokenType.Eof]);
+	}
+
+	[Theory]
+	[InlineData("-0")]
+	[InlineData("-1")]
+	[InlineData("-123.45")]
+	public void ScannerMatchesUnaryNegativeNumberLiterals(string source) {
+		var tokens = new Scanner(source, Error).Tokens.ToList();
+		tokens.Select(t => t.Type).ShouldBe([TokenType.Minus, TokenType.Number, TokenType.Eof]);
 	}
 
 	[Theory]

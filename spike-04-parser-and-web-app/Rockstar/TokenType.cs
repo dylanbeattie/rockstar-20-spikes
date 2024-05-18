@@ -4,5 +4,7 @@ public enum TokenType {
 	Identifier,
 	Output,
 	String,
-	Eof
+	Eof,
+	Number,
+	Minus
 }
