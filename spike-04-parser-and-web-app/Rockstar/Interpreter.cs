@@ -1,5 +1,5 @@
-﻿namespace Rockstar;
+namespace Rockstar;
 
 public class Interpreter(IAmARockstarEnvironment env) {
-	public int Run(Expr expr) => 0;
+	public int Run(IEnumerable<Statement> program) => 0;
 }

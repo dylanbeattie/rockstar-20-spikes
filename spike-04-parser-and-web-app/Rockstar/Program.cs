@@ -35,10 +35,10 @@ public static class Program {
 
 	static void Run(string source, IAmARockstarEnvironment env) {
 		var scanner = new Scanner(source, Error);
-		var parser = new Parser();
-		var abstractSyntaxTree = parser.Parse(scanner.Tokens);
+		var parser = new Parser(scanner.Tokens.ToList());
+		var program = parser.Parse();
 		var interpreter = new Interpreter(env);
-		interpreter.Run(abstractSyntaxTree);
+		interpreter.Run(program);
 	}
 
 	public static void Error(int line, string message) => Report(line, "", message);
