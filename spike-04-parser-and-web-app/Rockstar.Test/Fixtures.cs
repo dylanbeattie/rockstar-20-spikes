@@ -14,16 +14,31 @@ namespace Rockstar.Test {
 				=> this.outputStringBuilder.Append(output);
 		}
 
-		public static IEnumerable<object[]> GetFiles() =>
-			Directory.GetFiles("fixtures", "*.rock", SearchOption.AllDirectories)
+		private static string[] ListRockFiles() =>
+			Directory.GetFiles("fixtures", "*.rock", SearchOption.AllDirectories);
+
+		public static IEnumerable<object[]> GetFiles()
+			=> ListRockFiles().Select(filePath => new[] { filePath });
+
+		public static IEnumerable<object[]> GetFilesWithExpectations()
+			=> ListRockFiles()
+				.Where(filePath => File.ReadAllText(filePath).Contains("(expect: "))
 				.Select(filePath => new[] { filePath });
 
 		[Theory]
 		[MemberData(nameof(GetFiles))]
+		public void FileHasExpectations(string filePath) {
+			var source = File.ReadAllText(filePath);
+			var expect = ExtractExpects(source);
+			expect.ShouldNotBeEmpty();
+		}
+
+		[Theory]
+		[MemberData(nameof(GetFilesWithExpectations))]
 		public void RunFile(string filePath) {
 			var source = File.ReadAllText(filePath);
 			var expect = ExtractExpects(source);
-			if (String.IsNullOrEmpty(expect)) return;
+			expect.ShouldNotBeEmpty();
 			var scanner = new Scanner(source, (_, _) => { });
 			var parser = new Parser(scanner.Tokens.ToList());
 			var program = parser.Parse();
