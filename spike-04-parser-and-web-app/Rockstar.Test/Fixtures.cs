@@ -8,8 +8,10 @@ namespace Rockstar.Test {
 			private readonly StringBuilder outputStringBuilder = new();
 			public string Output => outputStringBuilder.ToString();
 			public string? ReadInput() => null;
-			public void WriteLine(string output) => this.outputStringBuilder.AppendLine(output);
-			public void Write(string output) => this.outputStringBuilder.Append(output);
+			public void WriteLine(string output)
+				=> this.outputStringBuilder.Append(output + '\n');
+			public void Write(string output)
+				=> this.outputStringBuilder.Append(output);
 		}
 
 		public static IEnumerable<object[]> GetFiles() =>
