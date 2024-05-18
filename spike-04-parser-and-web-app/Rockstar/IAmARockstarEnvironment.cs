@@ -1,6 +1,7 @@
-﻿namespace Rockstar;
+namespace Rockstar;
 
 public interface IAmARockstarEnvironment {
 	string? ReadInput();
-	void WriteOutput(string output);
+	void WriteLine(string output);
+	void Write(string output);
 }

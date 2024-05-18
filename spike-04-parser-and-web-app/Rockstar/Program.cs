@@ -25,9 +25,9 @@ public static class Program {
 
 	static void RunPrompt(ConsoleEnvironment env) {
 		while (true) {
-			env.WriteOutput("> ");
+			env.Write("> ");
 			var line = env.ReadInput();
-			if (line == null) break;
+			 if (line == null) break;
 			Run(line, env);
 			hadError = false;
 		}

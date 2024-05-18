@@ -26,6 +26,8 @@ public class Scanner(string source, Action<int, string> error) {
 		start = current;
 		var c = Next();
 		switch (c) {
+			case '(': SkipComment();
+				return null;
 			case ' ':
 			case '\r':
 			case '\t':
@@ -38,6 +40,18 @@ public class Scanner(string source, Action<int, string> error) {
 				if (c.IsAlpha()) return ScanIdentifier();
 				error(line, "Unexpected character");
 				return null;
+		}
+	}
+
+	private void SkipComment() {
+		while (Peek != ')' && !IsAtEnd) {
+			if (Peek == '\n') line++;
+			Next();
+		}
+		if (IsAtEnd) {
+			error(line, "Unterminated comment.");
+		} else {
+			Next();
 		}
 	}
 

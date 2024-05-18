@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using Shouldly;
 
 namespace Rockstar.Test {
@@ -7,7 +8,8 @@ namespace Rockstar.Test {
 			private readonly StringBuilder outputStringBuilder = new();
 			public string Output => outputStringBuilder.ToString();
 			public string? ReadInput() => null;
-			public void WriteOutput(string output) => this.outputStringBuilder.Append(output);
+			public void WriteLine(string output) => this.outputStringBuilder.AppendLine(output);
+			public void Write(string output) => this.outputStringBuilder.Append(output);
 		}
 
 		public static IEnumerable<object[]> GetFiles() =>
@@ -32,10 +34,10 @@ namespace Rockstar.Test {
 
 		public static string ExtractExpects(string source) =>
 			String
-				.Join(Environment.NewLine, source
+				.Join("", source
 					.Split("(expect: ")
 					.Skip(1)
-					.Select(e => e.Split(")")
-					.FirstOrDefault()));
+					.Select(e
+						=> Regex.Unescape(e.Split(")").First())));
 	}
 }
