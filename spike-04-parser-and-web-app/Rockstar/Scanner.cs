@@ -136,57 +136,24 @@ public class Scanner(string source, Action<int, string> error) {
 		TokenType match = default;
 		while (true) {
 			var lexeme = Lookahead(lookaheadFrom);
-			if (String.IsNullOrWhiteSpace(lexeme)) throw new InvalidOperationException("Oops!");
-			var tokenTypes = Keywords.Match(keyword += lexeme);
-			if (tokenTypes.Count == 0 && match != default) {
+			var partialMatches = Keywords.PartialMatches(keyword + lexeme);
+			if (Keywords.TryPerfectMatch(keyword + lexeme, out var perfectMatch)) {
+				if (!partialMatches.Any()) {
+					current += keyword.Length + lexeme.Length - 1;
+					return Token(perfectMatch);
+				}
+				match = perfectMatch;
+			} else if (! partialMatches.Any() && match != default) {
 				current += keyword.Length - 1;
 				return Token(match);
 			}
 			keyword += lexeme;
-			if (tokenTypes.Any(tt => tt.Value == MatchType.Complete)) {
-				// If we found a match, stash it - we might need it.
-				match = tokenTypes.First(tt => tt.Value == MatchType.Complete).Key;
-			}
-			if (tokenTypes.Any(tt => tt.Value == MatchType.Partial)) {
+			if (partialMatches.Any()) {
 				lookaheadFrom += lexeme.Length;
 				continue;
 			}
-			// if (tokenTypes.Count > 1) continue;
-			if (tokenTypes.Count == 1) {
-				current += keyword.Length - 1;
-				return Token(tokenTypes.First().Key);
-			}
 			current += keyword.Length - 1;
 			return Token(TokenType.Identifier);
-
-			
-			// Three scenarios:
-			// It matches NOTHING WHATSOEVER
-			// - it's an identifier.
-
-
-			//while (Peek.IsAlphaNumeric()) Next();
-			//// var lexeme = source[start..current];
-			//var tokenTypes = Keywords.Match(lexeme);
-			//var completeMatches = tokenTypes.Where(t => t.Value == MatchType.Complete).ToList();
-			//var partialMatches = tokenTypes.Where(t => t.Value == MatchType.Partial).ToList();
-			//if (completeMatches.Count == 1 && partialMatches.Count == 0) {
-			//	var tokenType = tokenTypes.First().Key;
-			//	if (tokenType != TokenType.String) return Token(tokenType);
-			//	return lexeme.ToLowerInvariant() switch {
-			//		"empty" => Token(TokenType.String, String.Empty),
-			//		_ => Token(tokenType)
-			//	};
-			//} else if (partialMatches.Count > 0) {
-
-			//}
-
-			//if (tokenTypes.Count == 0) {
-			//	// Could be some_variable
-			//	// return identifier
-			//	// OR keyword followed by identifier
-			//}
-
 		}
 	}
 }

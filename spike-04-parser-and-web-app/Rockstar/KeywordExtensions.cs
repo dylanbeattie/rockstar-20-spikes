@@ -7,19 +7,23 @@ public static class KeywordExtensions {
 		return String.Join(' ', words);
 	}
 
-	public static Dictionary<TokenType, MatchType> Match(
-		this Dictionary<TokenType, string[]> keywords, string text) {
-		var normalizedText = text.NormalizeSpacing();
-		return keywords.ToDictionary(pair => pair.Key, pair => pair.Value.Match(normalizedText))
-			.Where(pair => pair.Value != MatchType.NoMatch)
-			.ToDictionary();
-	}
+	public static TokenType[] PartialMatches(
+		this Dictionary<TokenType, string[]> keywords, string text)
+			=> keywords.Where(pair
+					=> pair.Value.Any(keyword
+						=> keyword.StartsWith(text + ' ', StringComparison.InvariantCultureIgnoreCase)))
+				.Select(pair => pair.Key).ToArray();
 
-	public static MatchType Match(this string[] keywords, string text) {
-		if (keywords.Any(keyword
-				=> keyword.Equals(text, StringComparison.InvariantCultureIgnoreCase)))
-			return MatchType.Complete;
-		return keywords.Any(keyword
-			=> keyword.StartsWith(text + ' ', StringComparison.InvariantCultureIgnoreCase)) ? MatchType.Partial : MatchType.NoMatch;
+	public static bool TryPerfectMatch(
+		this Dictionary<TokenType, string[]> keywords, string text, out TokenType tokenType) {
+		var normalizedText = text.NormalizeSpacing();
+		if (!keywords.Any(k
+				=> k.Value.Contains(normalizedText, StringComparer.InvariantCultureIgnoreCase))) {
+			tokenType = TokenType.Undefined;
+			return false;
+		}
+		tokenType = keywords.Single(k
+			=> k.Value.Contains(normalizedText, StringComparer.InvariantCultureIgnoreCase)).Key;
+		return true;
 	}
 }
