@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace Rockstar;
 
 public class Scanner(string source, Action<int, string> error) {
@@ -19,22 +17,35 @@ public class Scanner(string source, Action<int, string> error) {
 					yield return token;
 				}
 			}
+
 			yield return Token(TokenType.Eof);
 		}
 	}
+
+	private void SkipWhitespace() {
+		while (true)
+			switch (Peek) {
+				case '\n':
+					Next();
+					line++;
+					break;
+				case ' ':
+				case '\r':
+				case '\t':
+					Next();
+					break;
+				default:
+					return;
+			}
+	}
+
 	private Token? ScanToken() {
+		SkipWhitespace();
 		start = current;
 		var c = Next();
 		switch (c) {
 			case '(':
 				SkipComment();
-				return null;
-			case ' ':
-			case '\r':
-			case '\t':
-				return null;
-			case '\n':
-				line++;
 				return null;
 			case '"': return ScanString();
 			case '-': return Token(TokenType.Minus);
@@ -54,6 +65,7 @@ public class Scanner(string source, Action<int, string> error) {
 			if (Peek == '\n') line++;
 			Next();
 		}
+
 		if (IsAtEnd) {
 			error(line, "Unterminated comment.");
 		} else {
@@ -66,11 +78,13 @@ public class Scanner(string source, Action<int, string> error) {
 			if (Peek == '\n') line++;
 			Next();
 		}
+
 		if (IsAtEnd) {
 			error(line, "Unterminated string.");
 		} else {
 			Next();
 		}
+
 		var literal = source[start..current].Trim('"');
 		return Token(TokenType.String, literal);
 	}
@@ -81,6 +95,7 @@ public class Scanner(string source, Action<int, string> error) {
 			Next();
 			while (Peek.IsDigit()) Next();
 		}
+
 		var number = Decimal.Parse(source[start..current]);
 		return Token(TokenType.Number, number);
 	}
@@ -101,40 +116,65 @@ public class Scanner(string source, Action<int, string> error) {
 
 	private char Peek => IsAtEnd ? '\0' : source[current];
 
-	//private char PeekNext => current + 1 >= source.Length ? '\0' : source[current + 1];
+	private char PeekNext => current + 1 >= source.Length ? '\0' : source[current + 1];
+
 	public static readonly Dictionary<TokenType, string[]> Keywords = new() {
 		{ TokenType.Output, ["shout", "say", "whisper", "scream"] },
 		{ TokenType.Null, ["null", "nothing", "nowhere", "nobody", "gone"] },
-		{ TokenType.True, [ "true", "right", "yes", "ok" ] },
-		{ TokenType.False, [ "false", "wrong", "no", "lies" ] },
-		{ TokenType.Mysterious, [ "mysterious"] },
-		{ TokenType.String, [ "empty"] },
+		{ TokenType.True, ["true", "right", "yes", "ok"] },
+		{ TokenType.False, ["false", "wrong", "no", "lies"] },
+		{ TokenType.Mysterious, ["mysterious"] },
+		{ TokenType.String, ["empty"] },
 		{ TokenType.Plus, ["plus", "with"] },
 		{ TokenType.Minus, ["minus", "without"] },
-		{ TokenType.Star, ["times", "of" ] },
-		{ TokenType.Slash, ["over",] }
+		{ TokenType.Star, ["times", "of"] },
+		{ TokenType.Slash, ["over"] },
+		{ TokenType.EqualSign, ["is"] },
+		{ TokenType.GreaterThan, [ "is greater than"] }
 	};
 
+	private string Lookahead() {
+		var i = current-1;
+		while (i < source.Length && source[i].IsWhitespace()) i++;
+		if (i < source.Length && source[i].IsAlpha()) {
+			while (i+1 < source.Length && source[i].IsAlphaNumeric()) i++;
+		}
+		return source[(current-1)..i];
+	}
 	private Token ScanIdentifier() {
-		while (Peek.IsAlphaNumeric()) Next();
-		var lexeme = source[start..current];
-		var tokenTypes = Keywords.Match(lexeme);
-		throw new NotImplementedException();
-		//if (tokenTypes != TokenType.String) return Token(tokenType);
-		//return lexeme.ToLowerInvariant() switch {
-		//	"empty" => Token(TokenType.String, String.Empty),
-		//	_ => Token(tokenType)
-		//};
+		while (true) {
+			var lexeme = Lookahead();
+			if (String.IsNullOrWhiteSpace(lexeme)) throw new InvalidOperationException("Oops!");
+			current += lexeme.Length;
+			return Token(TokenType.Identifier);
+			//while (Peek.IsAlphaNumeric()) Next();
+			//// var lexeme = source[start..current];
+			//var tokenTypes = Keywords.Match(lexeme);
+			//var completeMatches = tokenTypes.Where(t => t.Value == MatchType.Complete).ToList();
+			//var partialMatches = tokenTypes.Where(t => t.Value == MatchType.Partial).ToList();
+			//if (completeMatches.Count == 1 && partialMatches.Count == 0) {
+			//	var tokenType = tokenTypes.First().Key;
+			//	if (tokenType != TokenType.String) return Token(tokenType);
+			//	return lexeme.ToLowerInvariant() switch {
+			//		"empty" => Token(TokenType.String, String.Empty),
+			//		_ => Token(tokenType)
+			//	};
+			//} else if (partialMatches.Count > 0) {
+
+			//}
+
+			//if (tokenTypes.Count == 0) {
+			//	// Could be some_variable
+			//	// return identifier
+			//	// OR keyword followed by identifier
+			//}
+
+		}
 	}
 }
 
-
-public static class KeywordExtensions {
-	private static readonly KeyValuePair<TokenType, string[]> identifier = new(TokenType.Identifier, []);
-
-	public static TokenType[] Match(this Dictionary<TokenType, string[]> keywords, string text)
-		=> keywords.Where(pair
-			=> pair.Value.Any(keyword
-				=> keyword.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)))
-			.Select(pair => pair.Key).ToArray();
+public enum MatchType {
+	NoMatch,
+	Complete,
+	Partial
 }

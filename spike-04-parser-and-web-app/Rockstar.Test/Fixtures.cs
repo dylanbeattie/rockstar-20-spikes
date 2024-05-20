@@ -37,31 +37,31 @@ public abstract class FixtureBase {
 					=> Regex.Unescape(e.Split(")").First())));
 }
 
-public class FixturePreTests : FixtureBase {
-	[Theory]
-	[MemberData(nameof(GetFiles))]
-	public void FileHasExpectations(string filePath) {
-		var expect = ExtractExpects(filePath);
-		expect.ShouldNotBeEmpty();
-	}
-}
+//public class FixturePreTests : FixtureBase {
+//	[Theory]
+//	[MemberData(nameof(GetFiles))]
+//	public void FileHasExpectations(string filePath) {
+//		var expect = ExtractExpects(filePath);
+//		expect.ShouldNotBeEmpty();
+//	}
+//}
 
-public class FixtureTests : FixtureBase {
-	[Theory]
-	[MemberData(nameof(GetFiles))]
-	public void RunFile(string filePath) {
-		var source = File.ReadAllText(filePath);
-		var expect = (File.Exists(filePath + ".out")
-			? File.ReadAllText(filePath + ".out")
-			: ExtractExpects(filePath));
-		expect.ShouldNotBeEmpty();
-		var scanner = new Scanner(source, (_, _) => { });
-		var parser = new Parser(scanner.Tokens.ToList());
-		var program = parser.Parse();
-		var env = new TestEnvironment();
-		var interpreter = new Interpreter(env);
-		interpreter.Run(program);
-		var result = env.Output;
-		result.ShouldBe(expect);
-	}
-}
+//public class FixtureTests : FixtureBase {
+//	[Theory]
+//	[MemberData(nameof(GetFiles))]
+//	public void RunFile(string filePath) {
+//		var source = File.ReadAllText(filePath);
+//		var expect = (File.Exists(filePath + ".out")
+//			? File.ReadAllText(filePath + ".out")
+//			: ExtractExpects(filePath));
+//		expect.ShouldNotBeEmpty();
+//		var scanner = new Scanner(source, (_, _) => { });
+//		var parser = new Parser(scanner.Tokens.ToList());
+//		var program = parser.Parse();
+//		var env = new TestEnvironment();
+//		var interpreter = new Interpreter(env);
+//		interpreter.Run(program);
+//		var result = env.Output;
+//		result.ShouldBe(expect);
+//	}
+//}

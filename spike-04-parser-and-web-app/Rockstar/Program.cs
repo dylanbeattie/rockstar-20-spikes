@@ -12,7 +12,8 @@ public static class Program {
 				RunFile(args[1], env);
 				break;
 			default:
-				RunPrompt(env);
+				// RunPrompt(env);
+				Run("aaa bbb ccc", env);
 				break;
 		}
 	}
