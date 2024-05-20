@@ -26,7 +26,8 @@ public class Scanner(string source, Action<int, string> error) {
 		start = current;
 		var c = Next();
 		switch (c) {
-			case '(': SkipComment();
+			case '(':
+				SkipComment();
 				return null;
 			case ' ':
 			case '\r':
@@ -37,6 +38,9 @@ public class Scanner(string source, Action<int, string> error) {
 				return null;
 			case '"': return ScanString();
 			case '-': return Token(TokenType.Minus);
+			case '+': return Token(TokenType.Plus);
+			case '/': return Token(TokenType.Slash);
+			case '*': return Token(TokenType.Star);
 			default:
 				if (c.IsDigit()) return ScanNumber();
 				if (c.IsAlpha()) return ScanIdentifier();
@@ -98,17 +102,29 @@ public class Scanner(string source, Action<int, string> error) {
 	private char Peek => IsAtEnd ? '\0' : source[current];
 
 	//private char PeekNext => current + 1 >= source.Length ? '\0' : source[current + 1];
-
-	private static readonly Dictionary<TokenType, string[]> keywords = new() {
-		{ TokenType.Output, ["shout", "say", "whisper", "scream"] }
+	public static readonly Dictionary<TokenType, string[]> Keywords = new() {
+		{ TokenType.Output, ["shout", "say", "whisper", "scream"] },
+		{ TokenType.Null, ["null", "nothing", "nowhere", "nobody", "gone"] },
+		{ TokenType.True, [ "true", "right", "yes", "ok" ] },
+		{ TokenType.False, [ "false", "wrong", "no", "lies" ] },
+		{ TokenType.Mysterious, [ "mysterious"] },
+		{ TokenType.String, [ "empty"] },
+		{ TokenType.Plus, ["plus", "with"] },
+		{ TokenType.Minus, ["minus", "without"] },
+		{ TokenType.Star, ["times", "of" ] },
+		{ TokenType.Slash, ["over",] }
 	};
-
 
 	private Token ScanIdentifier() {
 		while (Peek.IsAlphaNumeric()) Next();
 		var lexeme = source[start..current];
-		var tokenType = keywords.Match(lexeme);
-		return Token(tokenType);
+		var tokenTypes = Keywords.Match(lexeme);
+		throw new NotImplementedException();
+		//if (tokenTypes != TokenType.String) return Token(tokenType);
+		//return lexeme.ToLowerInvariant() switch {
+		//	"empty" => Token(TokenType.String, String.Empty),
+		//	_ => Token(tokenType)
+		//};
 	}
 }
 
@@ -116,9 +132,9 @@ public class Scanner(string source, Action<int, string> error) {
 public static class KeywordExtensions {
 	private static readonly KeyValuePair<TokenType, string[]> identifier = new(TokenType.Identifier, []);
 
-	public static TokenType Match(this Dictionary<TokenType, string[]> keywords, string text)
-		=> keywords.FirstOrDefault(pair
-			=> pair.Value.Contains(text, StringComparer.InvariantCultureIgnoreCase),
-			identifier
-			).Key;
+	public static TokenType[] Match(this Dictionary<TokenType, string[]> keywords, string text)
+		=> keywords.Where(pair
+			=> pair.Value.Any(keyword
+				=> keyword.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)))
+			.Select(pair => pair.Key).ToArray();
 }

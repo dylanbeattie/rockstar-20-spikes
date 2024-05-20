@@ -1,5 +1,5 @@
 my heart is true
-say my heart
+say my heart (expect: true\n)
 
 my love is false
-say my love
+say my love (expect: false\n)

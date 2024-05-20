@@ -6,5 +6,14 @@ public enum TokenType {
 	String,
 	Eof,
 	Number,
-	Minus
+	Minus,
+	Null,
+	True,
+	False,
+	Mysterious,
+	Plus,
+	Star,
+	Slash,
+	EqualSign,
+	GreaterThan
 }

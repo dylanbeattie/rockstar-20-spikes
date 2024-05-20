@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Rockstar;
 
 public class Token(TokenType type, string lexeme = "", object? literal = null, int line = 0) {

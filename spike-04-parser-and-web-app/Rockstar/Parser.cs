@@ -34,7 +34,7 @@ public class Parser(IList<Token> tokens) {
 	 * program		-> statement* EOF
 	 * statement	-> output
 	 * output		-> ("shout" | "scream" | "say" | "whisper") expression
-	 * expression	-> STRING
+	 * expression	-> STRING | TRUE | FALSE | NULL
 	 */
 
 	// say "HELLO WORLD"
@@ -51,14 +51,44 @@ public class Parser(IList<Token> tokens) {
 		return new Statement.Expression(Expression());
 	}
 
-	public Expr Expression() => Match(TokenType.Minus) ? Unary() : Literal();
+	public Expr Expression() {
+		var lhs = Factor();
+		while (Match(TokenType.Minus, TokenType.Plus)) {
+			var op = Previous();
+			var rhs = Factor();
+			lhs = new Expr.Binary(lhs, op, rhs);
+		}
 
-	public Expr Unary() => new Expr.Unary(TokenType.Minus, Literal());
+		return lhs;
+	}
+	public Expr Factor() {
+		var lhs = Unary();
+		while (Match(TokenType.Slash, TokenType.Star)) {
+			var op = Previous();
+			var rhs = Factor();
+			lhs = new Expr.Binary(lhs, op, rhs);
+		}
+		return lhs;
+	}
+
+	public Expr Unary() {
+		while (Match(TokenType.Minus)) {
+			var op = Previous();
+			var rhs = Unary();
+			return new Expr.Unary(op, rhs);
+		}
+
+		return Literal();
+	}
 
 	public Expr Literal() {
+		if (Match(TokenType.Mysterious)) return new Expr.Mysterious();
+		if (Match(TokenType.Null)) return new Expr.Null();
+		if (Match(TokenType.True)) return new Expr.True();
+		if (Match(TokenType.False)) return new Expr.False();
 		if (Match(TokenType.String)) return new Expr.String(Previous().Literal!.ToString()!);
 		if (Match(TokenType.Number)) return new Expr.Number((decimal) Previous().Literal!);
-		throw new NotImplementedException();
+		throw new NotImplementedException($"Literal(): no match for {Peek().Type} {Peek().Lexeme}");
 	}
 }
 

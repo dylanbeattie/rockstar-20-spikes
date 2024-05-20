@@ -1,23 +1,19 @@
-(all aliases for literals work)
-say mysterious
-say "aliases for null"
-say null
-say nothing
-say nowhere
-say nobody
-say gone
+say mysterious (expect: mysterious\n)
 
-say "aliases for empty string"
-say empty
+say null (expect: null\n)
+say nothing (expect: null\n)
+say nowhere (expect: null\n)
+say nobody (expect: null\n)
+say gone (expect: null\n)
 
-say "aliases for true"
-say true
-say right
-say yes
-say ok
+say empty (expect: \n)
 
-say "aliases for false"
-say false
-say wrong
-say no
-say lies
+say true (expect: true\n)
+say right (expect: true\n)
+say yes (expect: true\n)
+say ok (expect: true\n)
+
+say false (expect: false\n)
+say wrong (expect: false\n)
+say no (expect: false\n)
+say lies (expect: false\n)

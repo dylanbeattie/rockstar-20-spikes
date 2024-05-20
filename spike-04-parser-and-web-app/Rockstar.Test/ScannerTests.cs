@@ -2,6 +2,19 @@ using Shouldly;
 
 namespace Rockstar.Test;
 
+public class OperatorTests {
+	private static void Error(int line, string error) => throw new($"{line}: {error}");
+	[Theory]
+	[InlineData("1+2", TokenType.Plus)]
+	[InlineData("1/2", TokenType.Slash)]
+	[InlineData("1*2", TokenType.Star)]
+	[InlineData("1-2", TokenType.Minus)]
+	public void ScannerScansOperators(string source, TokenType op) {
+		var tokens = new Scanner(source, Error).Tokens.ToList();
+		tokens[1].Type.ShouldBe(op);
+	}
+}
+
 public class AmazingScannerTests {
 	private static void Error(int line, string error) => throw new($"{line}: {error}");
 
@@ -26,9 +39,10 @@ public class AmazingScannerTests {
 	[Theory]
 	[InlineData("\"foo\"")]
 	[InlineData("\"\"")]
+	[InlineData("empty")]
 	public void ScannerMatchesStringLiterals(string source) {
 		var tokens = new Scanner(source, Error).Tokens.ToList();
-		tokens.Select(t => t.Type).ShouldBe([ TokenType.String, TokenType.Eof ]);
+		tokens.Select(t => t.Type).ShouldBe([TokenType.String, TokenType.Eof]);
 	}
 
 	[Theory]
@@ -36,7 +50,7 @@ public class AmazingScannerTests {
 	public void ScannerMatchesMultilineStrings(string source, int lineNumber) {
 		var tokens = new Scanner(source, Error).Tokens.ToList();
 		tokens.Select(t => t.Type).ShouldBe([TokenType.String, TokenType.Eof]);
-		tokens.Select(t => t.Line).ShouldBe([3,4]);
+		tokens.Select(t => t.Line).ShouldBe([lineNumber, lineNumber+1]);
 	}
 
 	[Theory]

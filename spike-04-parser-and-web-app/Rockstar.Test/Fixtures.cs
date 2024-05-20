@@ -25,12 +25,12 @@ public abstract class FixtureBase {
 
 	public static IEnumerable<object[]> GetFilesWithExpectations()
 		=> ListRockFiles()
-			.Where(filePath => File.ReadAllText(filePath).Contains("(expect: "))
+			.Where(filePath => !String.IsNullOrWhiteSpace(ExtractExpects(filePath)))
 			.Select(filePath => new[] { filePath });
 
-	public static string ExtractExpects(string source) =>
+	public static string ExtractExpects(string filePath) =>
 		String
-			.Join("", source
+			.Join("", File.ReadAllText(filePath)
 				.Split("(expect: ")
 				.Skip(1)
 				.Select(e
@@ -41,18 +41,19 @@ public class FixturePreTests : FixtureBase {
 	[Theory]
 	[MemberData(nameof(GetFiles))]
 	public void FileHasExpectations(string filePath) {
-		var source = File.ReadAllText(filePath);
-		var expect = ExtractExpects(source);
+		var expect = ExtractExpects(filePath);
 		expect.ShouldNotBeEmpty();
 	}
 }
 
 public class FixtureTests : FixtureBase {
 	[Theory]
-	[MemberData(nameof(GetFilesWithExpectations))]
+	[MemberData(nameof(GetFiles))]
 	public void RunFile(string filePath) {
 		var source = File.ReadAllText(filePath);
-		var expect = ExtractExpects(source);
+		var expect = (File.Exists(filePath + ".out")
+			? File.ReadAllText(filePath + ".out")
+			: ExtractExpects(filePath));
 		expect.ShouldNotBeEmpty();
 		var scanner = new Scanner(source, (_, _) => { });
 		var parser = new Parser(scanner.Tokens.ToList());
