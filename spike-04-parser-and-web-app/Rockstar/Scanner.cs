@@ -122,20 +122,49 @@ public class Scanner(string source, Action<int, string> error) {
 		{ TokenType.GreaterThan, [ "is greater than"] }
 	};
 
-	private string Lookahead() {
-		var i = current-1;
+	private string Lookahead(int start) {
+		int i = start;
 		while (i < source.Length && source[i].IsWhitespace()) i++;
 		if (i < source.Length && source[i].IsAlpha()) {
 			while (i < source.Length && source[i].IsAlphaNumeric()) i++;
 		}
-		return source[(current-1)..i];
+		return source[start..i];
 	}
 	private Token ScanIdentifier() {
+		var keyword = "";
+		var lookaheadFrom = current - 1;
+		TokenType match = default;
 		while (true) {
-			var lexeme = Lookahead();
+			var lexeme = Lookahead(lookaheadFrom);
 			if (String.IsNullOrWhiteSpace(lexeme)) throw new InvalidOperationException("Oops!");
-			current += lexeme.Length-1;
+			var tokenTypes = Keywords.Match(keyword += lexeme);
+			if (tokenTypes.Count == 0 && match != default) {
+				current += keyword.Length - 1;
+				return Token(match);
+			}
+			keyword += lexeme;
+			if (tokenTypes.Any(tt => tt.Value == MatchType.Complete)) {
+				// If we found a match, stash it - we might need it.
+				match = tokenTypes.First(tt => tt.Value == MatchType.Complete).Key;
+			}
+			if (tokenTypes.Any(tt => tt.Value == MatchType.Partial)) {
+				lookaheadFrom += lexeme.Length;
+				continue;
+			}
+			// if (tokenTypes.Count > 1) continue;
+			if (tokenTypes.Count == 1) {
+				current += keyword.Length - 1;
+				return Token(tokenTypes.First().Key);
+			}
+			current += keyword.Length - 1;
 			return Token(TokenType.Identifier);
+
+			
+			// Three scenarios:
+			// It matches NOTHING WHATSOEVER
+			// - it's an identifier.
+
+
 			//while (Peek.IsAlphaNumeric()) Next();
 			//// var lexeme = source[start..current];
 			//var tokenTypes = Keywords.Match(lexeme);
@@ -160,10 +189,4 @@ public class Scanner(string source, Action<int, string> error) {
 
 		}
 	}
-}
-
-public enum MatchType {
-	NoMatch,
-	Complete,
-	Partial
 }

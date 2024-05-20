@@ -1,6 +1,7 @@
 namespace Rockstar;
 
 public enum TokenType {
+	Undefined,
 	Identifier,
 	Output,
 	String,

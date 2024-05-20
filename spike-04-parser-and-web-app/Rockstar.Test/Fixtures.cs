@@ -28,40 +28,42 @@ public abstract class FixtureBase {
 			.Where(filePath => !String.IsNullOrWhiteSpace(ExtractExpects(filePath)))
 			.Select(filePath => new[] { filePath });
 
-	public static string ExtractExpects(string filePath) =>
-		String
-			.Join("", File.ReadAllText(filePath)
+	public static string ExtractExpects(string filePathOrSourceCode) {
+		var source = File.Exists(filePathOrSourceCode) ? File.ReadAllText(filePathOrSourceCode) : filePathOrSourceCode;
+		return String
+			.Join("", source
 				.Split("(expect: ")
 				.Skip(1)
 				.Select(e
 					=> Regex.Unescape(e.Split(")").First())));
+	}
 }
 
-//public class FixturePreTests : FixtureBase {
-//	[Theory]
-//	[MemberData(nameof(GetFiles))]
-//	public void FileHasExpectations(string filePath) {
-//		var expect = ExtractExpects(filePath);
-//		expect.ShouldNotBeEmpty();
-//	}
-//}
+public class FixturePreTests : FixtureBase {
+	[Theory]
+	[MemberData(nameof(GetFiles))]
+	public void FileHasExpectations(string filePath) {
+		var expect = ExtractExpects(filePath);
+		expect.ShouldNotBeEmpty();
+	}
+}
 
-//public class FixtureTests : FixtureBase {
-//	[Theory]
-//	[MemberData(nameof(GetFiles))]
-//	public void RunFile(string filePath) {
-//		var source = File.ReadAllText(filePath);
-//		var expect = (File.Exists(filePath + ".out")
-//			? File.ReadAllText(filePath + ".out")
-//			: ExtractExpects(filePath));
-//		expect.ShouldNotBeEmpty();
-//		var scanner = new Scanner(source, (_, _) => { });
-//		var parser = new Parser(scanner.Tokens.ToList());
-//		var program = parser.Parse();
-//		var env = new TestEnvironment();
-//		var interpreter = new Interpreter(env);
-//		interpreter.Run(program);
-//		var result = env.Output;
-//		result.ShouldBe(expect);
-//	}
-//}
+public class FixtureTests : FixtureBase {
+	[Theory]
+	[MemberData(nameof(GetFiles))]
+	public void RunFile(string filePath) {
+		var source = File.ReadAllText(filePath);
+		var expect = (File.Exists(filePath + ".out")
+			? File.ReadAllText(filePath + ".out")
+			: ExtractExpects(filePath));
+		expect.ShouldNotBeEmpty();
+		var scanner = new Scanner(source, (_, _) => { });
+		var parser = new Parser(scanner.Tokens.ToList());
+		var program = parser.Parse();
+		var env = new TestEnvironment();
+		var interpreter = new Interpreter(env);
+		interpreter.Run(program);
+		var result = env.Output;
+		result.ShouldBe(expect);
+	}
+}
