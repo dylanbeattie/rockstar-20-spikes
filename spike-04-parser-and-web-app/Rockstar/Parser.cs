@@ -77,7 +77,6 @@ public class Parser(IList<Token> tokens) {
 			var rhs = Unary();
 			return new Expr.Unary(op, rhs);
 		}
-
 		return Literal();
 	}
 

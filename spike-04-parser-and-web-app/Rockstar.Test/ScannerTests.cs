@@ -81,10 +81,16 @@ public class AmazingScannerTests {
 	//	tokens.Select(t => t.Type).ShouldBe([TokenType.Output, TokenType.Eof]);
 	//}
 
-	[Fact]
-	public void ScannerLookaheadFindsIdentifiers() {
-		var source = "all banana badger";
+	[Theory]
+	[InlineData("", 1)]
+	[InlineData("x", 2)]
+	[InlineData("x x", 3)]
+	[InlineData("   x   ", 2)]
+	[InlineData("   x x   ", 3)]
+	[InlineData("   x x", 3)]
+	[InlineData("x x   ", 3)]
+	public void ScannerLookaheadFindsIdentifiers(string source, int tokenCount) {
 		var tokens = new Scanner(source, Error).Tokens.ToList();
-		tokens.Count.ShouldBe(5);
+		tokens.Count.ShouldBe(tokenCount);
 	}
 }

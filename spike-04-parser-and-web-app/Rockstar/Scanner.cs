@@ -22,28 +22,17 @@ public class Scanner(string source, Action<int, string> error) {
 		}
 	}
 
-	private void SkipWhitespace() {
-		while (true)
-			switch (Peek) {
-				case '\n':
-					Next();
-					line++;
-					break;
-				case ' ':
-				case '\r':
-				case '\t':
-					Next();
-					break;
-				default:
-					return;
-			}
-	}
-
 	private Token? ScanToken() {
-		SkipWhitespace();
 		start = current;
 		var c = Next();
 		switch (c) {
+			case '\n':
+				line++;
+				return null;
+			case ' ':
+			case '\r':
+			case '\t':
+				return null;
 			case '(':
 				SkipComment();
 				return null;
@@ -137,7 +126,7 @@ public class Scanner(string source, Action<int, string> error) {
 		var i = current-1;
 		while (i < source.Length && source[i].IsWhitespace()) i++;
 		if (i < source.Length && source[i].IsAlpha()) {
-			while (i+1 < source.Length && source[i].IsAlphaNumeric()) i++;
+			while (i < source.Length && source[i].IsAlphaNumeric()) i++;
 		}
 		return source[(current-1)..i];
 	}
@@ -145,7 +134,7 @@ public class Scanner(string source, Action<int, string> error) {
 		while (true) {
 			var lexeme = Lookahead();
 			if (String.IsNullOrWhiteSpace(lexeme)) throw new InvalidOperationException("Oops!");
-			current += lexeme.Length;
+			current += lexeme.Length-1;
 			return Token(TokenType.Identifier);
 			//while (Peek.IsAlphaNumeric()) Next();
 			//// var lexeme = source[start..current];
