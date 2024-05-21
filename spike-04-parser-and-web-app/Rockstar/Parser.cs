@@ -40,6 +40,7 @@ public class Parser(IList<Token> tokens) {
 	// say "HELLO WORLD"
 	public Statement Statement() {
 		if (Match(TokenType.Output)) return OutputStatement();
+
 		return ExpressionStatement();
 	}
 
@@ -52,20 +53,55 @@ public class Parser(IList<Token> tokens) {
 	}
 
 	public Expr Expression() {
-		var lhs = Factor();
+		return Assignment();
+	}
+
+	public Expr Assignment() {
+		var target = Equality();
+		if (!Match(TokenType.AreEqual) || target is not Expr.Variable variable) return target;
+		var equals = Previous();
+		var value = Assignment();
+		return new Expr.Assign(variable, value);
+	}
+
+	public Expr Equality() {
+		var expr = Comparison();
+		while (Match(TokenType.AreEqual, TokenType.NotEqual)) {
+			expr = new Expr.Binary(expr, Previous(), Comparison());
+		}
+		return expr;
+	}
+
+	private static readonly TokenType[] comparators = [
+		TokenType.GreaterThan,
+		TokenType.LessThan,
+		TokenType.GreaterThanEqual,
+		TokenType.LessThanEqual
+	];
+
+	public Expr Comparison() {
+		var expr = Addition();
+		while (Match(comparators)) {
+			expr = new Expr.Binary(expr, Previous(), Addition());
+		}
+		return expr;
+	}
+
+	public Expr Addition() {
+		var lhs = Multiplication();
 		while (Match(TokenType.Minus, TokenType.Plus)) {
 			var op = Previous();
-			var rhs = Factor();
+			var rhs = Multiplication();
 			lhs = new Expr.Binary(lhs, op, rhs);
 		}
 
 		return lhs;
 	}
-	public Expr Factor() {
+	public Expr Multiplication() {
 		var lhs = Unary();
 		while (Match(TokenType.Slash, TokenType.Star)) {
 			var op = Previous();
-			var rhs = Factor();
+			var rhs = Multiplication();
 			lhs = new Expr.Binary(lhs, op, rhs);
 		}
 		return lhs;
@@ -87,6 +123,7 @@ public class Parser(IList<Token> tokens) {
 		if (Match(TokenType.False)) return new Expr.False();
 		if (Match(TokenType.String)) return new Expr.String(Previous().Literal!.ToString()!);
 		if (Match(TokenType.Number)) return new Expr.Number((decimal) Previous().Literal!);
+		if (Match(TokenType.Identifier)) return new Expr.Variable(Previous());
 		throw new NotImplementedException($"Literal(): no match for {Peek().Type} {Peek().Lexeme}");
 	}
 }

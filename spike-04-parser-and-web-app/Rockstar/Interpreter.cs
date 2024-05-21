@@ -44,6 +44,11 @@ public class Interpreter(IAmARockstarEnvironment env) : IVisitExpressions<object
 		var lhs = Visit(expr.Lhs);
 		var rhs = Visit(expr.Rhs);
 		return expr.Op.Type switch {
+			TokenType.AreEqual => AreEqual(lhs, rhs),
+			TokenType.GreaterThan => GreaterThan(lhs, rhs),
+			TokenType.GreaterThanEqual => GreaterThanEqual(lhs, rhs),
+			TokenType.LessThan => LessThan(lhs, rhs),
+			TokenType.LessThanEqual => LessThanEqual(lhs, rhs),
 			TokenType.Plus => Sum(lhs, rhs),
 			TokenType.Minus => Difference(lhs, rhs),
 			TokenType.Star => Product(lhs, rhs),
@@ -51,6 +56,42 @@ public class Interpreter(IAmARockstarEnvironment env) : IVisitExpressions<object
 			_ => throw new NotImplementedException()
 		};
 	}
+
+	public object Visit(Expr.Assign expr) {
+		env.SetVariable(expr.Name, expr.Value);
+		return expr.Value!;
+	}
+
+	public object Visit(Expr.Variable expr) {
+		throw new NotImplementedException();
+	}
+
+	private object GreaterThanEqual(object lhs, object rhs) => (lhs, rhs) switch {
+		(decimal a, decimal b) => a >= b,
+		(_, _) => String.CompareOrdinal(lhs.ToString(), rhs.ToString()) >= 0
+	};
+
+	private object GreaterThan(object lhs, object rhs) => (lhs, rhs) switch {
+		(decimal a, decimal b) => a > b,
+		(_, _) => String.CompareOrdinal(lhs.ToString(), rhs.ToString()) > 0
+	};
+
+	private object LessThanEqual(object lhs, object rhs) => (lhs, rhs) switch {
+		(decimal a, decimal b) => a <= b,
+		(_, _) => String.CompareOrdinal(lhs.ToString(), rhs.ToString()) <= 0
+	};
+
+	private object LessThan(object lhs, object rhs) => (lhs, rhs) switch {
+		(decimal a, decimal b) => a < b,
+		(_, _) => String.CompareOrdinal(lhs.ToString(), rhs.ToString()) < 0
+	};
+
+	private object AreEqual(object lhs, object rhs) => (lhs, rhs) switch {
+		(null, null) => true,
+		(_, null) => false,
+		(null, _) => false,
+		(_, _) => lhs.Equals(rhs)
+	};
 
 	private object Quotient(object? lhs, object? rhs) => (lhs, rhs) switch {
 		(decimal a, decimal b) => a / b,

@@ -26,6 +26,8 @@
 
   <ItemGroup>
 	  <Content Include="fixtures\**\*.rock" CopyToOutputDirectory="Always" />
+	  <Content Include="fixtures\**\*.rock.out" CopyToOutputDirectory="Always" />
+	  <Content Include="fixtures\**\*.rock.in" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,11 @@ namespace Rockstar.Test;
 
 public abstract class FixtureBase {
 	public class TestEnvironment : IAmARockstarEnvironment {
+
+		private readonly Dictionary<string, object?> variables = new();
+		public void SetVariable(string name, object? value) => variables[name] = value;
+		public object? GetVariable(string name) => variables[name];
+
 		private readonly StringBuilder outputStringBuilder = new();
 		public string Output => outputStringBuilder.ToString();
 		public string? ReadInput() => null;
@@ -29,10 +34,16 @@ public abstract class FixtureBase {
 			.Select(filePath => new[] { filePath });
 
 	public static string ExtractExpects(string filePathOrSourceCode) {
-		var source = File.Exists(filePathOrSourceCode) ? File.ReadAllText(filePathOrSourceCode) : filePathOrSourceCode;
+		if (File.Exists(filePathOrSourceCode + ".out")) {
+			return File.ReadAllText(filePathOrSourceCode + ".out");
+		}
+
+		if (File.Exists(filePathOrSourceCode))
+			filePathOrSourceCode = File.ReadAllText(filePathOrSourceCode);
+
+		var tokens = (" " + filePathOrSourceCode).Split("(expect: ");
 		return String
-			.Join("", source
-				.Split("(expect: ")
+			.Join("", tokens
 				.Skip(1)
 				.Select(e
 					=> Regex.Unescape(e.Split(")").First())));

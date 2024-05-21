@@ -15,6 +15,11 @@ public enum TokenType {
 	Plus,
 	Star,
 	Slash,
-	EqualSign,
-	GreaterThan
+	AreEqual,
+	NotEqual,
+	GreaterThan,
+	LessThan,
+	LessThanEqual,
+	GreaterThanEqual,
+	CommonVariablePrefix
 }

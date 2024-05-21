@@ -41,5 +41,16 @@ public abstract class Expr {
 		public Expr Rhs { get; } = rhs;
 		public override T Accept<T>(IVisitExpressions<T> visitor) => visitor.Visit(this);
 	}
+
+	public class Variable(Token token) : Expr {
+		public string Name => token.Lexeme;
+		public override T Accept<T>(IVisitExpressions<T> visitor) => visitor.Visit(this);
+	}
+
+	public class Assign(Variable name, object? value) : Expr {
+		public string Name => name.Name;
+		public object? Value => value;
+		public override T Accept<T>(IVisitExpressions<T> visitor) => visitor.Visit(this);
+	}
 }
 

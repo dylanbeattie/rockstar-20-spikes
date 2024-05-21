@@ -102,6 +102,17 @@ public class AmazingScannerTests {
 	[InlineData("x is greater than y", 4)]
 	[InlineData("is greater than", 2)]
 	[InlineData("is greater than variable", 3)]
+	[InlineData("x is as high as y", 4)]
+	[InlineData("x is as low as y", 4)]
+	[InlineData("x is as great as y", 4)]
+	[InlineData("my heart", 2)]
+	[InlineData("a variable", 2)]
+	[InlineData("an variable", 2)]
+	[InlineData("the variable", 2)]
+	[InlineData("my variable", 2)]
+	[InlineData("your variable", 2)]
+	[InlineData("our variable", 2)]
+	[InlineData("my variable is bigger than your variable", 4)]
 	public void ScannerLookaheadFindsKeywords(string source, int tokenCount) {
 		var tokens = new Scanner(source, Error).Tokens.ToList();
 		tokens.Count.ShouldBe(tokenCount);
