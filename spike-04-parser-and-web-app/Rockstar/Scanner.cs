@@ -1,5 +1,3 @@
-using System.Net.NetworkInformation;
-
 namespace Rockstar;
 
 public class Scanner(string source, Action<int, string> error) {

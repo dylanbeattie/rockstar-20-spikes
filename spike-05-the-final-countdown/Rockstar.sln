@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rockstar", "Rockstar\Rockstar.csproj", "{1FC837B9-91F4-4FD5-9B6E-C7A386365F30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rockstar.Blazor", "Rockstar.Blazor\Rockstar.Blazor.csproj", "{7A547639-AC75-4583-B64C-0612C00181B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rockstar.Test", "Rockstar.Test\Rockstar.Test.csproj", "{FFF0EA09-D93F-4232-A78D-1AD332AFBFCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FC837B9-91F4-4FD5-9B6E-C7A386365F30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FC837B9-91F4-4FD5-9B6E-C7A386365F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FC837B9-91F4-4FD5-9B6E-C7A386365F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FC837B9-91F4-4FD5-9B6E-C7A386365F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A547639-AC75-4583-B64C-0612C00181B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A547639-AC75-4583-B64C-0612C00181B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A547639-AC75-4583-B64C-0612C00181B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A547639-AC75-4583-B64C-0612C00181B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFF0EA09-D93F-4232-A78D-1AD332AFBFCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFF0EA09-D93F-4232-A78D-1AD332AFBFCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFF0EA09-D93F-4232-A78D-1AD332AFBFCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFF0EA09-D93F-4232-A78D-1AD332AFBFCF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
