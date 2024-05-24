@@ -57,9 +57,8 @@ public class Interpreter(IAmARockstarEnvironment env) : IVisitExpressions<object
 		};
 	}
 
-	public object Visit(Expr.Assign expr) {
-		env.SetVariable(expr.Name, expr.Value);
-		return expr.Value!;
+	public void Visit(Statement.Assignment stmt) {
+		env.SetVariable(stmt.Name, stmt.Value);
 	}
 
 	public object Visit(Expr.Variable expr) {

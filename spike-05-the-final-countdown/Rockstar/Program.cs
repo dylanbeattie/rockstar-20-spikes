@@ -9,17 +9,17 @@ public static class Program {
 				Environment.Exit(64);
 				break;
 			case 1:
-				RunFile(args[1], env);
+				RunFile(args[0], env);
 				break;
 			default:
-				// RunPrompt(env);
-				Run("aaa bbb ccc", env);
+				RunPrompt(env);
 				break;
 		}
 	}
 
 	static void RunFile(string path, ConsoleEnvironment env) {
 		var contents = File.ReadAllText(path);
+		Console.WriteLine(contents);
 		Run(contents, env);
 		if (hadError) Environment.Exit(65);
 	}
@@ -36,11 +36,10 @@ public static class Program {
 
 	static void Run(string source, IAmARockstarEnvironment env) {
 		//TODO: what goes here now?
-		//var scanner = new Scanner(source, Error);
-		//var parser = new Parser(scanner.Tokens.ToList());
-		//var program = parser.Parse();
 		var parser = new Parser();
-		var interpreter = new Interpreter(env);
+		var result = parser.Parse(source);
+		foreach (var item in result) Console.WriteLine(item);
+		// var interpreter = new Interpreter(env);
 		//interpreter.Run(program);
 	}
 
@@ -52,9 +51,4 @@ public static class Program {
 		Console.Error.WriteLine($"[line {line}] Error{where}: {message}");
 		hadError = true;
 	}
-}
-
-
-public class Output {
-
 }

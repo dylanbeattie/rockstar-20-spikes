@@ -1,7 +1,7 @@
-namespace Rockstar;
+//namespace Rockstar;
 
-public enum MatchType {
-	NoMatch,
-	Complete,
-	Partial
-}
+//public enum MatchType {
+//	NoMatch,
+//	Complete,
+//	Partial
+//}

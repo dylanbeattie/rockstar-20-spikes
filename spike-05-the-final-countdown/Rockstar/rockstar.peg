@@ -2,55 +2,30 @@
 @classname Parser
 @using System.Globalization
 
-// program		= statement* EOF
+program <List<Output>>
+	= EOF
+		{ new List<Output>() }
+	/  _? stmt:statement EOF
+		{ new List<Output> { stmt } }
+	/  _? head:statement EOS tail:program
+		{ (new List<Output> { head }).Concat(tail).ToList() }
 
-additive <double> -memoize
-    = left:additive "+" right:multiplicative { left + right }
-    / left:additive "-" right:multiplicative { left - right }
-    / multiplicative
+EOS
+	= _? ","
 
-multiplicative <double> -memoize
-    = left:multiplicative "*" right:power { left * right }
-    / left:multiplicative "/" right:power { left / right }
-    / power
+statement <Output>
+	= output _ expr:expression { new Output(expr) }
 
-power <double>
-    = left:primary "^" right:power { Math.Pow(left, right) }
-    / primary
+output
+	= "shout"
 
-primary <double> -memoize
-    = decimal
-    / "-" primary:primary { -primary }
-    / "(" additive:additive ")" { additive }
+expression
+	= number
 
-decimal <double>
+number <double>
     = value:([0-9]+ ("." [0-9]+)?) { double.Parse(value, CultureInfo.InvariantCulture) }
 
+_ = [ \t]+
 
-/*
-statement	= assignment_stmt
-			/ output_stmt
-
-assignment_stmt
-			= identifier whitespace "is" whitespace expression
-				{ new Assignment(identifier, expression) }
-
-output_stmt = output whitespace expression
-				{ new Output(identifier, expression) }
-
-identifier	= [a-z]+
-
-output		= "say" / "shout"
-
-expression = identifier { new Lookup(identifier) }
-			/ number
-
-number 		= value:([0-9]+ ("." [0-9]+)?)
-				{ double.Parse(value, CultureInfo.InvariantCulture) }
-
-whitespace = [ \t]
-
-*/
-
-// EOF = !.
-
+EOF
+	= !.

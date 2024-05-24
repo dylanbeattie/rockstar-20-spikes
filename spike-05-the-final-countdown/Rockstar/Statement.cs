@@ -1,3 +1,5 @@
+using static Rockstar.Expr;
+
 namespace Rockstar;
 
 public abstract class Statement {
@@ -16,6 +18,14 @@ public abstract class Statement {
 		public override T Accept<T>(IVisitStatements<T> visitor) => visitor.Visit(this);
 		public override void Accept(IVisitStatements visitor) => visitor.Visit(this);
 	}
+
+	public class Assignment(Variable name, object? value) : Statement {
+		public string Name => name.Name;
+		public object? Value => value;
+		public override T Accept<T>(IVisitStatements<T> visitor) => visitor.Visit(this);
+		public override void Accept(IVisitStatements visitor) => visitor.Visit(this);
+	}
+
 
 }
 
