@@ -2,30 +2,26 @@
 @classname Parser
 @using System.Globalization
 
-program <List<Output>>
+program <Prögram>
 	= EOF
-		{ new List<Output>() }
+		{ new Prögram() }
 	/  _? stmt:statement EOF
-		{ new List<Output> { stmt } }
+		{ new Prögram(stmt) }
 	/  _? head:statement EOS tail:program
-		{ (new List<Output> { head }).Concat(tail).ToList() }
+		{ tail.Insert(head) }
 
-EOS
-	= _? ","
-
-statement <Output>
-	= output _ expr:expression { new Output(expr) }
+statement <Statement.Output>
+	= output _ expr:expression { new Statement.Output(expr) }
 
 output
 	= "shout"
 
-expression
+expression <Expression>
 	= number
 
-number <double>
-    = value:([0-9]+ ("." [0-9]+)?) { double.Parse(value, CultureInfo.InvariantCulture) }
+number <Number>
+    = digits:([0-9]+ ("." [0-9]+)?) { new Number(Decimal.Parse(digits)) }
 
-_ = [ \t]+
-
-EOF
-	= !.
+_	= [ \t]+
+EOS	= _? ","
+EOF	= !.

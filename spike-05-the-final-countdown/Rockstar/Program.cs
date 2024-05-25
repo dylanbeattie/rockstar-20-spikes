@@ -12,7 +12,8 @@ public static class Program {
 				RunFile(args[0], env);
 				break;
 			default:
-				RunPrompt(env);
+				Run("shout 1, shout 2, shout 3, shout   4   , shout 5, shout   6   , shout 7", env);
+				// RunPrompt(env);
 				break;
 		}
 	}
@@ -37,8 +38,8 @@ public static class Program {
 	static void Run(string source, IAmARockstarEnvironment env) {
 		//TODO: what goes here now?
 		var parser = new Parser();
-		var result = parser.Parse(source);
-		foreach (var item in result) Console.WriteLine(item);
+			var program = parser.Parse(source);
+		foreach (var item in program.Statements) Console.WriteLine(item);
 		// var interpreter = new Interpreter(env);
 		//interpreter.Run(program);
 	}
