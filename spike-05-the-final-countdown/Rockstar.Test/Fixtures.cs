@@ -1,5 +1,9 @@
+using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using NCrunch.Framework;
 using Shouldly;
 
 namespace Rockstar.Test;
@@ -60,6 +64,8 @@ public class FixturePreTests : FixtureBase {
 }
 
 public class FixtureTests : FixtureBase {
+	private static readonly Parser parser = new();
+
 	[Theory]
 	[MemberData(nameof(GetFiles))]
 	public void RunFile(string filePath) {
@@ -68,9 +74,7 @@ public class FixtureTests : FixtureBase {
 			? File.ReadAllText(filePath + ".out")
 			: ExtractExpects(filePath));
 		expect.ShouldNotBeEmpty();
-		var scanner = new Scanner(source, (_, _) => { });
-		var parser = new Parser(scanner.Tokens.ToList());
-		var program = parser.Parse();
+		var program = parser.Parse(source);
 		var env = new TestEnvironment();
 		var interpreter = new Interpreter(env);
 		interpreter.Run(program);

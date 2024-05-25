@@ -1,6 +1,10 @@
 @namespace Rockstar
 @classname Parser
 @using System.Globalization
+@using Rockstar.Statements
+@using Rockstar.Expressions
+
+@ignorecase true
 
 program <Prögram>
 	= EOF
@@ -10,18 +14,93 @@ program <Prögram>
 	/  _? head:statement EOS tail:program
 		{ tail.Insert(head) }
 
-statement <Statement.Output>
-	= output _ expr:expression { new Statement.Output(expr) }
+EOS	= _? '\r'? '\n'
 
-output
-	= "shout"
+EOF	= !.
+
+statement <Statement>
+	= assign_stmt
+	/ output_stmt
+
+assign_stmt <Statement>
+	= v:variable _ assign _ e:expression { new Assign(v, e) }
+
+output_stmt  <Statement>
+	= output _ e:expression { new Output(e) }
+
+variable <Variable>
+	= name:("" [a-z]+) { new Variable(name) }
 
 expression <Expression>
+	= variable
+	/ unary
+
+unary <Expression>
+	= op:unary_op ex:expression { new Unary(op, ex) }
+	/ boolean
+
+boolean = nor
+
+nor	 <Expression>
+	= lhs:or _ 'nor' rhs:or
+		{ new Binary(Operator.Nor, lhs, rhs) }
+	/ or
+
+or	 <Expression>
+	= lhs:and _ 'or' _ rhs:and
+		{ new Binary(Operator.Or, lhs, rhs) }
+	/ and
+
+and  <Expression>
+	= lhs:equals _ 'and' _ rhs:and
+		{ new Binary(Operator.And, lhs, rhs) }
+	/ equals
+
+equals <Expression>
+	= lhs:not op:eq rhs:equals
+		{ new Binary(op,lhs,rhs) }
+	/ not
+
+not <Expression>
+	= 'not' _ ex:not { new Unary(Operator.Not, ex) }
+	/ compare
+
+compare <Expression>
+	= lhs:math op:comparator _ rhs:compare
+		{ new Binary(op, lhs, rhs) }
+	/ math
+
+gtr = ("greater"	/ "higher"	/ "bigger"	/ "stronger")
+ltr = ("less"		/ "lower"	/ "smaller" / "weaker")
+gte = ("great" / "high", "big" / "strong") 
+lte = ("less" / "low" / "small" / "weak"")
+
+comparator <Operator>
+	= is _ gt _ 'than' { Operator.GreaterThan }
+	/ is _ lt _ 'than' { Operator.LessThan }
+	/ is _ 'as' _ gt _ 'as' { Operator.GreaterThanEqual }
+	/ is _ 'as' _ lt _ 'as' { Operator.LessThanEqual }
+
+is = ("'s" / "'re" / _ ('=' / 'is' / 'was' / 'are' / 'were'))
+
+
+literal <Expression>
 	= number
+	/ string
+
+string <Strïng>
+	= '"' contents:("" [^"]*) '"' { new Strïng(contents) }
 
 number <Number>
     = digits:([0-9]+ ("." [0-9]+)?) { new Number(Decimal.Parse(digits)) }
 
-_	= [ \t]+
-EOS	= _? ","
-EOF	= !.
+unary_op <Operator>
+	= "-" { Operator.Minus }
+
+_           = (whitespace / comment)+
+
+assign		= "is" / "are" / "was" / "were"
+output		= "shout" / "say" / "scream" / "whisper"
+
+whitespace  = [ \t]
+comment     = '(' [^)]* ')' / '{' [^\}]* '}' / '[' [^\]]* ']'

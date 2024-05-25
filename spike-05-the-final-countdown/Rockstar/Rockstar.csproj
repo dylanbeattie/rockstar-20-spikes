@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PegGrammar Include="rockstar.peg" />
+    <PegGrammar Include="rockstar.peg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </PegGrammar>
   </ItemGroup>
 
 </Project>

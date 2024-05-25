@@ -1,55 +1,48 @@
 namespace Rockstar;
 
 public static class Program {
+	private static readonly IAmARockstarEnvironment env = new ConsoleEnvironment();
+	private static readonly Parser parser = new();
 	public static void Main(string[] args) {
-		var env = new ConsoleEnvironment();
 		switch (args.Length) {
 			case > 1:
 				Console.WriteLine("Usage: rockstar <program.rock>");
 				Environment.Exit(64);
 				break;
 			case 1:
-				RunFile(args[0], env);
+				RunFile(args[0]);
 				break;
 			default:
-				Run("shout 1, shout 2, shout 3, shout   4   , shout 5, shout   6   , shout 7", env);
-				// RunPrompt(env);
+				// RunPrompt();
+				Run("""
+				    shout 1
+				    shout 2
+				    shout 4
+				    """);
 				break;
 		}
 	}
 
-	static void RunFile(string path, ConsoleEnvironment env) {
-		var contents = File.ReadAllText(path);
-		Console.WriteLine(contents);
-		Run(contents, env);
-		if (hadError) Environment.Exit(65);
-	}
+	private static void RunFile(string path) => Run(File.ReadAllText(path));
 
-	static void RunPrompt(ConsoleEnvironment env) {
+	private static void RunPrompt() {
 		while (true) {
 			env.Write("> ");
 			var line = env.ReadInput();
-			 if (line == null) break;
-			Run(line, env);
-			hadError = false;
+			if (line == null) break;
+			Run(line);
 		}
 	}
 
-	static void Run(string source, IAmARockstarEnvironment env) {
-		//TODO: what goes here now?
-		var parser = new Parser();
+	private static void Run(string source) {
+		try {
 			var program = parser.Parse(source);
-		foreach (var item in program.Statements) Console.WriteLine(item);
-		// var interpreter = new Interpreter(env);
-		//interpreter.Run(program);
-	}
-
-	public static void Error(int line, string message) => Report(line, "", message);
-
-	private static bool hadError = false;
-
-	private static void Report(int line, string where, string message) {
-		Console.Error.WriteLine($"[line {line}] Error{where}: {message}");
-		hadError = true;
+			Console.WriteLine(program);
+			Console.WriteLine(String.Empty.PadLeft(40, '-'));
+			var interpreter = new Interpreter(env);
+			interpreter.Run(program);
+		} catch (FormatException ex) {
+			Console.Error.WriteLine(ex);
+		}
 	}
 }
