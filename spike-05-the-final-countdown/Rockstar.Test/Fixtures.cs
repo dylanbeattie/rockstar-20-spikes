@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using NCrunch.Framework;
+using Pegasus.Common;
 using Shouldly;
 
 namespace Rockstar.Test;
@@ -83,6 +84,10 @@ public class FixtureTests : FixtureBase {
 			var result = env.Output;
 			result.ShouldBe(expect);
 		} catch (Exception ex) {
+			var cursor = ex.Data["cursor"] as Cursor;
+			var line = source.Split('\n')[cursor.Line - 1].TrimEnd();
+			Console.Error.WriteLine(line);
+			Console.Error.WriteLine(String.Empty.PadLeft(cursor.Column-1) + "^");
 			Console.Error.WriteLine(ex);
 			throw;
 

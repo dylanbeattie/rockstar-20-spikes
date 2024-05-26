@@ -7,23 +7,26 @@
 @ignorecase true
 
 program <Prögram>
-	= EOS* EOF
+	= __ EOF
 		{ new Prögram() }
-	/  _? stmt:statement _ EOF
+	/ __ stmt:statement EOS* EOF
 		{ new Prögram(stmt) }
-	/  _? head:statement EOS+ tail:program
+	/ __ head:statement EOS+ tail:program
 		{ tail.Insert(head) }
+	/ #error{ "Error at line " + state.Line + ", col " + state.Column }
 
-EOS	= _? '\r'? '\n'
-
+__ = _? EOS* 
+EOS	= _? EOL _?
+EOL = '\r'? '\n'
 EOF	= !.
-
+	
 statement <Statement>
 	= assign_stmt
 	/ output_stmt
 
 assign_stmt <Statement>
-	= v:variable _ assign _ e:expression { new Assign(v, e) }
+	= v:variable _ 'says' _ s:("" .*) EOL { new Assign(v, new Strïng(s)) }
+	/ v:variable _ assign _ e:expression { new Assign(v, e) }
 
 output_stmt  <Statement>
 	= output _ e:expression { new Output(e) }
@@ -33,10 +36,11 @@ variable <Variable>
 
 expression <Expression>
 	= variable
-	/ unary
+	/ unary	
 
 unary <Expression>
-	= op:unary_op ex:expression { new Unary(op, ex) }
+	= op:unary_op ex:expression
+		{ new Unary(op, ex) }
 	/ boolean
 
 boolean = nor
@@ -105,7 +109,7 @@ divide	<Operator>	= (_? '/' _? / _ 'over' _ / _ 'between' _ ) { Operator.Divide 
 
 literal <Expression>
 	= number
-	/ string
+	/ string	
 
 string <Strïng>
 	= '"' contents:("" [^"]*) '"' { new Strïng(contents) }
