@@ -16,7 +16,7 @@ public class Prögram {
 	public Prögram(Statement statement) => statements = [statement];
 	public override string ToString() {
 		var sb = new StringBuilder();
-		foreach (var stmt in Statements) sb.AppendLine(stmt.ToString());
+		foreach (var stmt in Statements) stmt.Print(sb);
 		return sb.ToString();
 	}
 }

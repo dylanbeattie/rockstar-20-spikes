@@ -74,11 +74,18 @@ public class FixtureTests : FixtureBase {
 			? File.ReadAllText(filePath + ".out")
 			: ExtractExpects(filePath));
 		expect.ShouldNotBeEmpty();
-		var program = parser.Parse(source);
-		var env = new TestEnvironment();
-		var interpreter = new Interpreter(env);
-		interpreter.Run(program);
-		var result = env.Output;
-		result.ShouldBe(expect);
+		try {
+			var program = parser.Parse(source);
+			Console.WriteLine(program);
+			var env = new TestEnvironment();
+			var interpreter = new Interpreter(env);
+			interpreter.Run(program);
+			var result = env.Output;
+			result.ShouldBe(expect);
+		} catch (Exception ex) {
+			Console.Error.WriteLine(ex);
+			throw;
+
+		}
 	}
 }

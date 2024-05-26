@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Numerics;
 using Rockstar.Expressions;
 using Rockstar.Statements;
 
@@ -22,16 +23,22 @@ public class Interpreter(IAmARockstarEnvironment env) {
 	};
 
 	private Result Assign(Assign assign) {
-		env.SetVariable(assign.Name, assign.Value);
+		env.SetVariable(assign.Name, Eval(assign.Expr));
 		return Result.Ok;
 	}
 
 	private Result Output(Output output) {
-		env.WriteLine(Eval(output.Expr).ToString());
+
+		var value = Eval(output.Expr);
+		env.WriteLine(value switch {
+			decimal d => d.ToString("G29"),
+			_ => value.ToString()
+		});
 		return Result.Ok;
 	}
 
 	private object Eval(Expression expr) => expr switch {
+		Binary binary => binary.Resolve(Eval),
 		Number number => number.Value,
 		Strïng strïng => strïng.Value,
 		Variable v => env.GetVariable(v.Name)!,
@@ -39,6 +46,30 @@ public class Interpreter(IAmARockstarEnvironment env) {
 			{ Op: Operator.Minus, Expr: Number n } => -(n.Value),
 			_ => throw new NotImplementedException()
 		},
+
 		_ => throw new NotImplementedException()
 	};
+
+	//private object Binary(Binary binary) => binary.Op switch {
+	//	Operator.Plus => Plus(binary.Lhs, binary.Rhs)
+	//	Operator.Minus => expr,
+	//	Operator.Times => expr,
+	//	Operator.Divide => expr,
+	//	Operator.And => expr,
+	//	Operator.Or => expr,
+	//	Operator.Equals => expr,
+	//	Operator.Not => expr,
+	//	Operator.Nor => expr,
+	//	Operator.LessThanEqual => expr,
+	//	Operator.GreaterThanEqual => expr,
+	//	Operator.LessThan => expr,
+	//	Operator.GreaterThan => expr,
+	//	_ => throw new ArgumentOutOfRangeException()
+	//};
+
+	//private object Plus(Binary binary) => (Eval(lhs), Eval(rhs)) switch {
+	//	(decimal l, decimal r) => l + r,
+	//	(string l, string r) => l + r,
+	//	_ => throw new InvalidOperationException("Can't add those!")
+	//};
 }

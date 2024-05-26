@@ -13,12 +13,13 @@ public static class Program {
 				RunFile(args[0]);
 				break;
 			default:
+				RunFile("D:\\Projects\\github\\dylanbeattie\\rockstar-20-spikes\\spike-05-the-final-countdown\\Rockstar.Test\\fixtures\\math\\operators.rock");
 				// RunPrompt();
-				Run("""
-				    shout 1
-				    shout 2
-				    shout 4
-				    """);
+				//Run("""
+				//    shout 1+2
+				//    shout 2
+				//    shout 4
+				//    """);
 				break;
 		}
 	}

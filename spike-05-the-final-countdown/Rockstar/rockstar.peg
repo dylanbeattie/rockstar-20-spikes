@@ -7,11 +7,11 @@
 @ignorecase true
 
 program <Prögram>
-	= EOF
+	= EOS* EOF
 		{ new Prögram() }
-	/  _? stmt:statement EOF
+	/  _? stmt:statement _ EOF
 		{ new Prögram(stmt) }
-	/  _? head:statement EOS tail:program
+	/  _? head:statement EOS+ tail:program
 		{ tail.Insert(head) }
 
 EOS	= _? '\r'? '\n'
@@ -70,19 +70,38 @@ compare <Expression>
 		{ new Binary(op, lhs, rhs) }
 	/ math
 
-gtr = ("greater"	/ "higher"	/ "bigger"	/ "stronger")
-ltr = ("less"		/ "lower"	/ "smaller" / "weaker")
-gte = ("great" / "high", "big" / "strong") 
-lte = ("less" / "low" / "small" / "weak"")
+gtr = ("greater"/ "higher"	/ "bigger"	/ "stronger" )
+ltr = ("less" / "lower"	/ "smaller" / "weaker" )
+gte = ("great" / "high" / "big" / "strong" ) 
+lte = ("less" / "low" / "small" / "weak" )
 
 comparator <Operator>
-	= is _ gt _ 'than' { Operator.GreaterThan }
-	/ is _ lt _ 'than' { Operator.LessThan }
-	/ is _ 'as' _ gt _ 'as' { Operator.GreaterThanEqual }
-	/ is _ 'as' _ lt _ 'as' { Operator.LessThanEqual }
+	= is _ gtr _ 'than' { Operator.GreaterThan }
+	/ is _ ltr _ 'than' { Operator.LessThan }
+	/ is _ 'as' _ gte _ 'as' { Operator.GreaterThanEqual }
+	/ is _ 'as' _ lte _ 'as' { Operator.LessThanEqual }
 
-is = ("'s" / "'re" / _ ('=' / 'is' / 'was' / 'are' / 'were'))
+eq = is
 
+is <Operator>
+	= ("'s" / "'re" / _ ('=' / 'is' / 'was' / 'are' / 'were'))
+		{ Operator.Equals }
+
+math <Expression>
+	= sum
+
+sum <Expression> -memoize
+	= lhs:sum op:(plus/minus) rhs:product { new Binary(op, lhs, rhs) }
+	/ product
+
+product <Expression> -memoize
+	= lhs:product op:(times/divide) rhs:literal { new Binary(op, lhs, rhs) }
+	/ literal
+
+plus	<Operator>	= (_? '+' _? / _ 'plus' _ / _ 'with' ) { Operator.Plus }
+minus	<Operator>	= (_? '-' _? / _ 'minus' _ / _ 'without' _ ) { Operator.Minus }
+times	<Operator>	= (_? '*' _? / _ 'times' _ / _ 'of' _ ) { Operator.Times }
+divide	<Operator>	= (_? '/' _? / _ 'over' _ / _ 'between' _ ) { Operator.Divide }
 
 literal <Expression>
 	= number

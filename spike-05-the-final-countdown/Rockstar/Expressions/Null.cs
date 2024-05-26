@@ -1,5 +1,5 @@
-namespace Rockstar.Expressions;
+//namespace Rockstar.Expressions;
 
-public class Null : Expression {
+//public class Null : Expression {
 	
-}
+//}
