@@ -15,7 +15,7 @@ program <Prögram>
 		{ tail.Insert(head) }
 	/ #error{ "Error at line " + state.Line + ", col " + state.Column }
 
-__ = _? EOS* 
+__ = _? EOS*
 EOS	= _? EOL _?
 EOL = '\r'? '\n'
 EOF	= !.
@@ -25,14 +25,14 @@ statement <Statement>
 	/ output_stmt
 
 assign_stmt <Statement>
-	= v:variable _ 'says' _ s:("" .*) EOL { new Assign(v, new Strïng(s)) }
-	/ v:variable _ assign _ e:expression { new Assign(v, e) }
+	= v:variable _ 'says' _ s:("" .*) EOL { new Assign(v, new Strïng(s, state.Line, state.Column, s), state.Line, state.Column) }
+	/ v:variable _ assign _ e:expression { new Assign(v, e, state.Line, state.Column) }
 
 output_stmt  <Statement>
-	= output _ e:expression { new Output(e) }
+	= output _ e:expression { new Output(e, state.Line, state.Column) }
 
 variable <Variable>
-	= name:("" [a-z]+) { new Variable(name) }
+	= name:("" [a-z]+) { new Variable(name, state.Line, state.Column, name) }
 
 expression <Expression>
 	= variable
@@ -40,38 +40,38 @@ expression <Expression>
 
 unary <Expression>
 	= op:unary_op ex:expression
-		{ new Unary(op, ex) }
+		{ new Unary(op, ex, state.Line, state.Column) }
 	/ boolean
 
 boolean = nor
 
 nor	 <Expression>
 	= lhs:or _ 'nor' rhs:or
-		{ new Binary(Operator.Nor, lhs, rhs) }
+		{ new Binary(Operator.Nor, lhs, rhs, state.Line, state.Column) }
 	/ or
 
 or	 <Expression>
 	= lhs:and _ 'or' _ rhs:and
-		{ new Binary(Operator.Or, lhs, rhs) }
+		{ new Binary(Operator.Or, lhs, rhs, state.Line, state.Column) }
 	/ and
 
 and  <Expression>
 	= lhs:equals _ 'and' _ rhs:and
-		{ new Binary(Operator.And, lhs, rhs) }
+		{ new Binary(Operator.And, lhs, rhs, state.Line, state.Column) }
 	/ equals
 
 equals <Expression>
 	= lhs:not op:eq rhs:equals
-		{ new Binary(op,lhs,rhs) }
+		{ new Binary(op,lhs,rhs, state.Line, state.Column) }
 	/ not
 
 not <Expression>
-	= 'not' _ ex:not { new Unary(Operator.Not, ex) }
+	= 'not' _ ex:not { new Unary(Operator.Not, ex, state.Line, state.Column) }
 	/ compare
 
 compare <Expression>
 	= lhs:math op:comparator _ rhs:compare
-		{ new Binary(op, lhs, rhs) }
+		{ new Binary(op, lhs, rhs, state.Line, state.Column) }
 	/ math
 
 gtr = ("greater"/ "higher"	/ "bigger"	/ "stronger" )
@@ -95,11 +95,11 @@ math <Expression>
 	= sum
 
 sum <Expression> -memoize
-	= lhs:sum op:(plus/minus) rhs:product { new Binary(op, lhs, rhs) }
+	= lhs:sum op:(plus/minus) rhs:product { new Binary(op, lhs, rhs, state.Line, state.Column) }
 	/ product
 
 product <Expression> -memoize
-	= lhs:product op:(times/divide) rhs:literal { new Binary(op, lhs, rhs) }
+	= lhs:product op:(times/divide) rhs:literal { new Binary(op, lhs, rhs, state.Line, state.Column) }
 	/ literal
 
 plus	<Operator>	= (_? '+' _? / _ 'plus' _ / _ 'with' ) { Operator.Plus }
@@ -112,10 +112,10 @@ literal <Expression>
 	/ string	
 
 string <Strïng>
-	= '"' contents:("" [^"]*) '"' { new Strïng(contents) }
+	= '"' contents:("" [^"]*) '"' { new Strïng(contents, state.Line, state.Column, contents) }
 
 number <Number>
-    = digits:([0-9]+ ("." [0-9]+)?) { new Number(Decimal.Parse(digits)) }
+    = digits:([0-9]+ ("." [0-9]+)?) { new Number(Decimal.Parse(digits), state.Line, state.Column, digits) }
 
 unary_op <Operator>
 	= "-" { Operator.Minus }

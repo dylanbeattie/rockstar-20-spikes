@@ -3,7 +3,7 @@ using Rockstar.Expressions;
 
 namespace Rockstar.Statements;
 
-public class Assign(Variable name, Expression expr) : Statement {
+public class Assign(Variable name, Expression expr, int line, int column) : Statement(line,column) {
 	public string Name => name.Name;
 	public Expression Expr => expr;
 	public override void Print(StringBuilder sb, int depth) {

@@ -18,7 +18,8 @@ public enum Operator {
 	GreaterThan
 }
 
-public class Binary(Operator op, Expression lhs, Expression rhs) : Expression {
+public class Binary(Operator op, Expression lhs, Expression rhs, int line, int column)
+	: Expression(line,column) {
 	public Operator Op => op;
 	public Expression Lhs => lhs;
 	public Expression Rhs => rhs;

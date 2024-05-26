@@ -3,7 +3,7 @@ using Rockstar.Expressions;
 
 namespace Rockstar.Statements;
 
-public class Output(Expression expr) : Statement {
+public class Output(Expression expr, int line, int column) : Statement(line,column) {
 	public Expression Expr => expr;
 	public override string ToString() => $"output: {expr}";
 
