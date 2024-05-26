@@ -3,13 +3,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using NCrunch.Framework;
 using Pegasus.Common;
-using Shouldly;
+using Xunit.Abstractions;
 
 namespace Rockstar.Test;
 
-public abstract class FixtureBase {
+public abstract class FixtureBase(ITestOutputHelper testOutput) {
 	public class TestEnvironment : IAmARockstarEnvironment {
 
 		private readonly Dictionary<string, object?> variables = new();
@@ -52,45 +51,5 @@ public abstract class FixtureBase {
 				.Skip(1)
 				.Select(e
 					=> Regex.Unescape(e.Split(")").First())));
-	}
-}
-
-public class FixturePreTests : FixtureBase {
-	[Theory]
-	[MemberData(nameof(GetFiles))]
-	public void FileHasExpectations(string filePath) {
-		var expect = ExtractExpects(filePath);
-		expect.ShouldNotBeEmpty();
-	}
-}
-
-public class FixtureTests : FixtureBase {
-	private static readonly Parser parser = new();
-
-	[Theory]
-	[MemberData(nameof(GetFiles))]
-	public void RunFile(string filePath) {
-		var source = File.ReadAllText(filePath);
-		var expect = (File.Exists(filePath + ".out")
-			? File.ReadAllText(filePath + ".out")
-			: ExtractExpects(filePath));
-		expect.ShouldNotBeEmpty();
-		try {
-			var program = parser.Parse(source);
-			Console.WriteLine(program);
-			var env = new TestEnvironment();
-			var interpreter = new Interpreter(env);
-			interpreter.Run(program);
-			var result = env.Output;
-			result.ShouldBe(expect);
-		} catch (Exception ex) {
-			var cursor = ex.Data["cursor"] as Cursor;
-			var line = source.Split('\n')[cursor.Line - 1].TrimEnd();
-			Console.Error.WriteLine(line);
-			Console.Error.WriteLine(String.Empty.PadLeft(cursor.Column-1) + "^");
-			Console.Error.WriteLine(ex);
-			throw;
-
-		}
 	}
 }
