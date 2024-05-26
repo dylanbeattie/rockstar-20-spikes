@@ -5,5 +5,5 @@ public interface IAmARockstarEnvironment {
 	void WriteLine(string? output);
 	void Write(string output);
 	void SetVariable(string name, object? value);
-	object? GetVariable(string name);
+	object GetVariable(string name);
 }

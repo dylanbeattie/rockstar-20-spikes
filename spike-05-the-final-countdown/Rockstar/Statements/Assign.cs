@@ -7,7 +7,8 @@ public class Assign(Variable name, Expression expr, int line, int column) : Stat
 	public string Name => name.Name;
 	public Expression Expr => expr;
 	public override void Print(StringBuilder sb, int depth) {
-		sb.Indent(depth).AppendLine("assign: {name}");
+		sb.Indent(depth).AppendLine($"assign:");
+		name.Print(sb, depth + 1);
 		expr.Print(sb, depth + 1);
 	}
 }

@@ -6,11 +6,11 @@
 
 @ignorecase true
 
-program <Prögram>
+program <Progräm>
 	= __ EOF
-		{ new Prögram() }
+		{ new Progräm() }
 	/ __ stmt:statement EOS* EOF
-		{ new Prögram(stmt) }
+		{ new Progräm(stmt) }
 	/ __ head:statement EOS+ tail:program
 		{ tail.Insert(head) }
 	/ #error{ "Error at line " + state.Line + ", col " + state.Column }
@@ -35,27 +35,25 @@ variable <Variable>
 	= name:("" [a-z]+) { new Variable(name, state.Line, state.Column, name) }
 
 expression <Expression>
-	= variable
-	/ unary	
+	= unary
+	/ variable
 
 unary <Expression>
 	= op:unary_op ex:expression
 		{ new Unary(op, ex, state.Line, state.Column) }
-	/ boolean
-
-boolean = nor
-
-nor	 <Expression>
-	= lhs:or _ 'nor' rhs:or
-		{ new Binary(Operator.Nor, lhs, rhs, state.Line, state.Column) }
 	/ or
 
-or	 <Expression>
-	= lhs:and _ 'or' _ rhs:and
+// nor	 <Expression>
+// 	= lhs:or _ 'nor' rhs:or
+// 		{ new Binary(Operator.Nor, lhs, rhs, state.Line, state.Column) }
+// 	/ or
+
+or <Expression>
+	= lhs:and _ 'or' _ rhs:or
 		{ new Binary(Operator.Or, lhs, rhs, state.Line, state.Column) }
 	/ and
 
-and  <Expression>
+and <Expression>
 	= lhs:equals _ 'and' _ rhs:and
 		{ new Binary(Operator.And, lhs, rhs, state.Line, state.Column) }
 	/ equals
@@ -99,17 +97,37 @@ sum <Expression> -memoize
 	/ product
 
 product <Expression> -memoize
-	= lhs:product op:(times/divide) rhs:literal { new Binary(op, lhs, rhs, state.Line, state.Column) }
-	/ literal
+	= lhs:product op:(times/divide) rhs:primary { new Binary(op, lhs, rhs, state.Line, state.Column) }
+	/ primary
 
 plus	<Operator>	= (_? '+' _? / _ 'plus' _ / _ 'with' ) { Operator.Plus }
 minus	<Operator>	= (_? '-' _? / _ 'minus' _ / _ 'without' _ ) { Operator.Minus }
 times	<Operator>	= (_? '*' _? / _ 'times' _ / _ 'of' _ ) { Operator.Times }
 divide	<Operator>	= (_? '/' _? / _ 'over' _ / _ 'between' _ ) { Operator.Divide }
 
+primary <Expression>
+	= literal
+	/ lookup
+
+lookup <Expression>
+	= v:variable { new Looküp(v, state.Line, state.Column) }
+
 literal <Expression>
-	= number
-	/ string	
+	= constant
+	/ number
+	/ string
+
+constant <Expression>
+	= true
+	/ false
+
+true <Expression>
+	= keyword:("true" / "yes" / "ok" / "right")
+		{ new True(state.Line, state.Column, keyword) }
+
+false <Expression>
+	= keyword:("false" / "lies" / "no" / "wrong")
+		{ new False(state.Line, state.Column, keyword) }
 
 string <Strïng>
 	= '"' contents:("" [^"]*) '"' { new Strïng(contents, state.Line, state.Column, contents) }

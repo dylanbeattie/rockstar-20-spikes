@@ -2,18 +2,18 @@ using System.Text;
 
 namespace Rockstar.Statements;
 
-public class Prögram {
+public class Progräm {
 	private readonly List<Statement> statements = [];
 	public List<Statement> Statements => statements;
 
-	public Prögram Insert(Statement statement) {
+	public Progräm Insert(Statement statement) {
 		statements.Insert(0, statement);
 		return this;
 	}
 
-	public Prögram() { }
+	public Progräm() { }
 
-	public Prögram(Statement statement) => statements = [statement];
+	public Progräm(Statement statement) => statements = [statement];
 	public override string ToString() {
 		var sb = new StringBuilder();
 		foreach (var stmt in Statements) stmt.Print(sb);

@@ -11,7 +11,7 @@ public class Interpreter(IAmARockstarEnvironment env) {
 		public static readonly Result Unknown = new();
 	}
 
-	public int Run(Prögram program) {
+	public int Run(Progräm program) {
 		foreach (var statement in program.Statements) Exec(statement);
 		return 0;
 	}
@@ -38,16 +38,22 @@ public class Interpreter(IAmARockstarEnvironment env) {
 	}
 
 	private object Eval(Expression expr) => expr switch {
+		True => true,
+		False => false,
+		Looküp lookup => env.GetVariable(lookup.Variable.Name),
 		Binary binary => binary.Resolve(Eval),
 		Number number => number.Value,
 		Strïng strïng => strïng.Value,
 		Variable v => env.GetVariable(v.Name)!,
 		Unary u => u switch {
 			{ Op: Operator.Minus, Expr: Number n } => -(n.Value),
+			{ Op: Operator.Not } => Eval(u.Expr) switch {
+				IAmTruthy t => ! t.Truthy,
+				_ => throw new InvalidOperationException($"Cannot apply 'not' to expr of type {u.Expr.GetType()}")
+			},
 			_ => throw new NotImplementedException()
 		},
-
-		_ => throw new NotImplementedException()
+		_ => throw new NotImplementedException($"Eval not implemented for {expr.GetType()}")
 	};
 
 	//private object Binary(Binary binary) => binary.Op switch {

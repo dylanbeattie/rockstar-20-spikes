@@ -44,16 +44,26 @@ namespace Rockstar.Test {
 		[Theory]
 		[InlineData("say 1\nsay 2")]
 		[InlineData("\nsay 1\r\nsay 2")]
-		//[InlineData("\r\nsay 1say 2")]
-		//[InlineData("     \r\nsay 1\nsay 2")]
-		//[InlineData("   say 1\nsay 2")]
-		//[InlineData("()   say 1\nsay 2")]
-		//[InlineData("say () 1  \r\nsay 2")]
-		//[InlineData("   () say 1  \r\nsay 2")]
+		[InlineData("\r\nsay 1\nsay 2")]
+		[InlineData("     \r\nsay 1\nsay 2")]
+		[InlineData("   say 1\nsay 2")]
+		[InlineData("()   say 1\nsay 2")]
+		[InlineData("say () 1  \r\nsay 2")]
+		[InlineData("   () say 1  \r\nsay 2")]
 		public void ParserParsesWeirdProgramsWithMultipleStatements(string source) {
 			var parser = new Parser();
 			var result = parser.Parse(source);
 			result.Statements.Count.ShouldBe(2);
+		}
+
+		[Theory]
+		[InlineData("x is true")]
+		[InlineData("x is false")]
+		[InlineData("x is false or 5")]
+		[InlineData("say x and y")]
+		public void ParserParsesBooleans(string source) {
+			var parser = new Parser();
+			var result = parser.Parse(source);
 		}
 	}
 }

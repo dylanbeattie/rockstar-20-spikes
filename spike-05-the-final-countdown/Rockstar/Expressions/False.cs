@@ -1,5 +1,8 @@
-//namespace Rockstar.Expressions;
+using System.Text;
 
-//public class False : Expression {
-	
-//}
+namespace Rockstar.Expressions;
+
+public class False(int line, int column, string? lexeme = default)
+	: Expression(line, column, lexeme), IAmTruthy {
+	public bool Truthy => false;
+}

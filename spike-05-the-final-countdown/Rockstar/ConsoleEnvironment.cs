@@ -1,3 +1,5 @@
+using Rockstar.Expressions;
+
 namespace Rockstar;
 
 public class ConsoleEnvironment : IAmARockstarEnvironment {
@@ -6,5 +8,6 @@ public class ConsoleEnvironment : IAmARockstarEnvironment {
 	public void Write(string output) => Console.Write(output);
 	private readonly Dictionary<string, object?> variables = new();
 	public void SetVariable(string name, object? value) => variables[name] = value;
-	public object? GetVariable(string name) => variables[name];
+	public object GetVariable(string name)
+		=> variables[name] ?? Mysterious.Instance;
 }

@@ -16,28 +16,35 @@ public class FixtureTests(ITestOutputHelper testOutput) : FixtureBase(testOutput
 			? File.ReadAllText(filePath + ".out")
 			: ExtractExpects(filePath));
 		expect.ShouldNotBeEmpty();
+
+		var testProjectFilePath = NCrunchEnvironment.GetOriginalProjectPath();
+		var testProjectDirectory = Path.GetDirectoryName(testProjectFilePath);
+		var originalRockFilePath = Path.Combine(testProjectDirectory, filePath);
+
+		Statements.Progräm program = new();
 		try {
-			var program = parser.Parse(source);
-			testOutput.WriteLine(program.ToString());
-			var env = new TestEnvironment();
-			var interpreter = new Interpreter(env);
-			interpreter.Run(program);
-			var result = env.Output;
-			result.ShouldBe(expect);
-		} catch (Exception ex) {
+			program = parser.Parse(source);
+		} catch (FormatException ex) {
 			var cursor = ex.Data["cursor"] as Cursor;
 			if (cursor != default) {
 				var line = source.Split('\n')[cursor.Line - 1].TrimEnd('\r');
 				testOutput.WriteLine(line);
 				testOutput.WriteLine(String.Empty.PadLeft(cursor.Column -1) + "^ error is here!");
 			}
-			var testProjectFilePath = NCrunchEnvironment.GetOriginalProjectPath();
-			var testProjectDirectory = Path.GetDirectoryName(testProjectFilePath);
-			var originalRockFilePath = Path.Combine(testProjectDirectory, filePath);
 			var ncrunchOutputMessage = $"   at <Rockstar code> in {originalRockFilePath}:line {cursor.Line}";
 			testOutput.WriteLine(ncrunchOutputMessage);
 			throw;
-
+		}
+		try {
+			var env = new TestEnvironment();
+			var interpreter = new Interpreter(env);
+			interpreter.Run(program);
+			var result = env.Output;
+			result.ShouldBe(expect);
+		} catch (Exception) {
+			var ncrunchOutputMessage = $"   at <Rockstar code> in {originalRockFilePath}:line 1";
+			testOutput.WriteLine(ncrunchOutputMessage);
+			throw;
 		}
 	}
 }
