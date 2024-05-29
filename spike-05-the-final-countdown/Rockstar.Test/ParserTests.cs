@@ -61,7 +61,7 @@ namespace Rockstar.Test {
 		[InlineData("x is false")]
 		[InlineData("x is false or 5")]
 		[InlineData("say x and y")]
-		public void ParserParsesBooleans(string source) {
+		public void ParserParsesBooleäns(string source) {
 			var parser = new Parser();
 			var result = parser.Parse(source);
 		}

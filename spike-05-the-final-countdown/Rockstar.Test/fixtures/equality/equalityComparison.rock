@@ -30,7 +30,7 @@ say true is null
 say false is null
 say null is null
 say ""
-say "Checking boolean strings"
+say "Checking Booleän strings"
 say true is "true"
 say true is "RIGht"
 say true is "lies"

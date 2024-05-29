@@ -3,6 +3,7 @@
 @using System.Globalization
 @using Rockstar.Statements
 @using Rockstar.Expressions
+@using Rockstar.Values;
 
 @ignorecase true
 
@@ -25,14 +26,14 @@ statement <Statement>
 	/ output_stmt
 
 assign_stmt <Statement>
-	= v:variable _ 'says' _ s:("" .*) EOL { new Assign(v, new Strïng(s, state.Line, state.Column, s), state.Line, state.Column) }
-	/ v:variable _ assign _ e:expression { new Assign(v, e, state.Line, state.Column) }
+	= v:variable _ 'says' _ s:("" .*) EOL { new Assign(v, new Strïng(s, state.Source(s)), state.Source()) }
+	/ v:variable _ assign _ e:expression { new Assign(v, e, state.Source()) }
 
 output_stmt  <Statement>
-	= output _ e:expression { new Output(e, state.Line, state.Column) }
+	= output _ e:expression { new Output(e, state.Source()) }
 
 variable <Variable>
-	= name:("" [a-z]+) { new Variable(name, state.Line, state.Column, name) }
+	= name:("" [a-z]+) { new Variable(name, state.Source(name)) }
 
 expression <Expression>
 	= unary
@@ -40,36 +41,36 @@ expression <Expression>
 
 unary <Expression>
 	= op:unary_op ex:expression
-		{ new Unary(op, ex, state.Line, state.Column) }
+		{ new Unary(op, ex, state.Source()) }
 	/ or
 
 // nor	 <Expression>
 // 	= lhs:or _ 'nor' rhs:or
-// 		{ new Binary(Operator.Nor, lhs, rhs, state.Line, state.Column) }
+// 		{ new Binary(Operator.Nor, lhs, rhs, state.Source()) }
 // 	/ or
 
 or <Expression>
 	= lhs:and _ 'or' _ rhs:or
-		{ new Binary(Operator.Or, lhs, rhs, state.Line, state.Column) }
+		{ new Binary(Operator.Or, lhs, rhs, state.Source()) }
 	/ and
 
 and <Expression>
 	= lhs:equals _ 'and' _ rhs:and
-		{ new Binary(Operator.And, lhs, rhs, state.Line, state.Column) }
+		{ new Binary(Operator.And, lhs, rhs, state.Source()) }
 	/ equals
 
 equals <Expression>
 	= lhs:not op:eq rhs:equals
-		{ new Binary(op,lhs,rhs, state.Line, state.Column) }
+		{ new Binary(op,lhs,rhs, state.Source()) }
 	/ not
 
 not <Expression>
-	= 'not' _ ex:not { new Unary(Operator.Not, ex, state.Line, state.Column) }
+	= 'not' _ ex:not { new Unary(Operator.Not, ex, state.Source()) }
 	/ compare
 
 compare <Expression>
 	= lhs:math op:comparator _ rhs:compare
-		{ new Binary(op, lhs, rhs, state.Line, state.Column) }
+		{ new Binary(op, lhs, rhs, state.Source()) }
 	/ math
 
 gtr = ("greater"/ "higher"	/ "bigger"	/ "stronger" )
@@ -93,11 +94,11 @@ math <Expression>
 	= sum
 
 sum <Expression> -memoize
-	= lhs:sum op:(plus/minus) rhs:product { new Binary(op, lhs, rhs, state.Line, state.Column) }
+	= lhs:sum op:(plus/minus) rhs:product { new Binary(op, lhs, rhs, state.Source()) }
 	/ product
 
 product <Expression> -memoize
-	= lhs:product op:(times/divide) rhs:primary { new Binary(op, lhs, rhs, state.Line, state.Column) }
+	= lhs:product op:(times/divide) rhs:primary { new Binary(op, lhs, rhs, state.Source()) }
 	/ primary
 
 plus	<Operator>	= (_? '+' _? / _ 'plus' _ / _ 'with' ) { Operator.Plus }
@@ -110,7 +111,7 @@ primary <Expression>
 	/ lookup
 
 lookup <Expression>
-	= v:variable { new Looküp(v, state.Line, state.Column) }
+	= v:variable { new Looküp(v, state.Source()) }
 
 literal <Expression>
 	= constant
@@ -123,17 +124,17 @@ constant <Expression>
 
 true <Expression>
 	= keyword:("true" / "yes" / "ok" / "right")
-		{ new True(state.Line, state.Column, keyword) }
+		{ new Booleän(true, state.Source(keyword)) }
 
 false <Expression>
 	= keyword:("false" / "lies" / "no" / "wrong")
-		{ new False(state.Line, state.Column, keyword) }
+		{ new Booleän(false, state.Source(keyword)) }
 
 string <Strïng>
-	= '"' contents:("" [^"]*) '"' { new Strïng(contents, state.Line, state.Column, contents) }
+	= '"' contents:("" [^"]*) '"' { new Strïng(contents, state.Source(contents)) }
 
 number <Number>
-    = digits:([0-9]+ ("." [0-9]+)?) { new Number(Decimal.Parse(digits), state.Line, state.Column, digits) }
+    = digits:([0-9]+ ("." [0-9]+)?) { new Number(Decimal.Parse(digits), state.Source(digits) ) }
 
 unary_op <Operator>
 	= "-" { Operator.Minus }

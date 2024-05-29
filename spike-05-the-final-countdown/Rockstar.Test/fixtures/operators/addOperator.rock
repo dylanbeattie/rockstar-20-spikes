@@ -14,7 +14,7 @@ say "hello" plus " " plus 5
 say "hello" plus " " plus .11
 say 5.5 plus " " plus "hello"
 
-(string + boolean)
+(string + Booleän)
 say "your words are " plus lies
 say "your words are " plus True
 say true plus ", you are."

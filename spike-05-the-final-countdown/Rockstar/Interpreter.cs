@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.Numerics;
 using Rockstar.Expressions;
 using Rockstar.Statements;
+using Rockstar.Values;
+using Booleän = Rockstar.Values.Booleän;
 
 namespace Rockstar;
 
@@ -28,30 +30,22 @@ public class Interpreter(IAmARockstarEnvironment env) {
 	}
 
 	private Result Output(Output output) {
-
 		var value = Eval(output.Expr);
-		env.WriteLine(value switch {
-			decimal d => d.ToString("G29"),
-			_ => value.ToString()
-		});
+		env.WriteLine(value.ToStrïng().Value);
 		return Result.Ok;
 	}
 
-	private object Eval(Expression expr) => expr switch {
-		True => true,
-		False => false,
-		Looküp lookup => env.GetVariable(lookup.Variable.Name),
+	private Value Eval(Expression expr) => expr switch {
+		Value value => value,
 		Binary binary => binary.Resolve(Eval),
-		Number number => number.Value,
-		Strïng strïng => strïng.Value,
-		Variable v => env.GetVariable(v.Name)!,
+
+		// not sure what the difference is here.... ?
+		Looküp lookup => env.GetVariable(lookup.Variable.Name),
+		Variable v => env.GetVariable(v.Name),
 		Unary u => u switch {
-			{ Op: Operator.Minus, Expr: Number n } => -(n.Value),
-			{ Op: Operator.Not } => Eval(u.Expr) switch {
-				IAmTruthy t => ! t.Truthy,
-				_ => throw new InvalidOperationException($"Cannot apply 'not' to expr of type {u.Expr.GetType()}")
-			},
-			_ => throw new NotImplementedException()
+			{ Op: Operator.Minus, Expr: Number n } => n.Negate(),
+			{ Op: Operator.Not } => Booleän.Not(Eval(u.Expr)),
+			_ => throw new NotImplementedException($"Cannot apply {u.Op} to {u.Expr}")
 		},
 		_ => throw new NotImplementedException($"Eval not implemented for {expr.GetType()}")
 	};

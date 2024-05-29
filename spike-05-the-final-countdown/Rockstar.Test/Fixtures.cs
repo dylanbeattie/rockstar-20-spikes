@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Pegasus.Common;
+using Rockstar.Values;
 using Xunit.Abstractions;
 
 namespace Rockstar.Test;
@@ -11,9 +12,9 @@ namespace Rockstar.Test;
 public abstract class FixtureBase(ITestOutputHelper testOutput) {
 	public class TestEnvironment : IAmARockstarEnvironment {
 
-		private readonly Dictionary<string, object?> variables = new();
-		public void SetVariable(string name, object? value) => variables[name] = value;
-		public object? GetVariable(string name) => variables[name];
+		private readonly Dictionary<string, Value> variables = new();
+		public void SetVariable(string name, Value value) => variables[name] = value;
+		public Value GetVariable(string name) => variables[name];
 
 		private readonly StringBuilder outputStringBuilder = new();
 		public string Output => outputStringBuilder.ToString();

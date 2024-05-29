@@ -14,7 +14,7 @@ namespace Rockstar.Test.Expressions {
 		[InlineData("true", true)]
 		[InlineData(" ", true)]
 		public void StringsAreTruthy(string s, bool expected) {
-			var t = ((IAmTruthy) new Rockstar.Expressions.Strïng(s));
+			var t = new Rockstar.Values.Strïng(s);
 			t.Truthy.ShouldBe(expected);
 		}
 	}

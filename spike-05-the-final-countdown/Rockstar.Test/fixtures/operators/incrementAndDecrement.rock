@@ -20,8 +20,8 @@ put 2.25 into Other Variable
 knock Other Variable down
 say Other Variable
 
-say "booleans"
-(increment and decrement flip the value of booleans)
+say "Booleäns"
+(increment and decrement flip the value of Booleäns)
 my test is true
 knock my test down
 say my test
