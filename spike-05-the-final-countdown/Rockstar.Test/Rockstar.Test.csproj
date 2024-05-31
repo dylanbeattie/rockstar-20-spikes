@@ -32,7 +32,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="fixtures\operators\short-circuit.rock" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Rockstar\Rockstar.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="fixtures\operators\short-circuit.rock">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

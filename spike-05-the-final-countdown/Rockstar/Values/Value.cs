@@ -12,9 +12,9 @@ public abstract class Value(Source source)
 		_ => throw new NotImplementedException("honk")
 	});
 
-	public Value And(Value that) => this.Truthy ? this : that;
+	public Value And(Value that) => this.Truthy ? that : this;
 
-	public Value Or(Value that) => this.Truthy ? that : this;
+	public Value Or(Value that) => this.Truthy ? this : that;
 
 	public Value Plus(Value that) => (this, that) switch {
 		(Number a, Number b) => new Number(a.Value + b.Value),

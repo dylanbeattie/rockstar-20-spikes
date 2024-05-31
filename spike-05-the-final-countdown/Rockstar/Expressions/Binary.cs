@@ -4,48 +4,31 @@ using Rockstar.Values;
 
 namespace Rockstar.Expressions;
 
-public enum Operator {
-	Plus,
-	Minus,
-	Times,
-	Divide,
-	And,
-	Or,
-	Equals,
-	Not,
-	Nor,
-	LessThanEqual,
-	GreaterThanEqual,
-	LessThan,
-	GreaterThan
-}
-
-
-
 public class Binary(Operator op, Expression lhs, Expression rhs, Source source)
 	: Expression(source) {
 
-	private static readonly
-		Dictionary<Operator, Func<Value, Value, Value>> ops = new() {
-		{ Operator.And, (a, b) => a.And(b) },
-		{ Operator.Or, (a,b) => a.Or(b) },
-		{ Operator.Plus, (a,b) => a.Plus(b) },
-		{ Operator.Minus, (a,b) => a.Minus(b) },
-		{ Operator.Times, (a,b) => a.Times(b) },
-		{ Operator.Divide, (a,b) => a.Divide(b) },
-		{ Operator.Equals, (a,b) => a.Equäls(b) },
-		{ Operator.LessThanEqual, (a,b) => a.LessThanEqual(b) },
-		{ Operator.GreaterThanEqual, (a,b) => a.MoreThanEqual(b) },
-		{ Operator.LessThan, (a,b) => a.LessThan(b) },
-		{ Operator.GreaterThan, (a,b) => a.MoreThan(b) },
-	};
-
 	public Operator Op => op;
-	public Expression Lhs => lhs;
-	public Expression Rhs => rhs;
+	//public Expression Lhs => lhs;
+	//public Expression Rhs => rhs;
 
-	public Value Resolve(Func<Expression, Value> eval)
-		=> ops[op](eval(lhs), eval(rhs));
+	public Value Resolve(Func<Expression, Value> eval) {
+		var v = eval(lhs);
+		return op switch {
+			Operator.Plus => v.Plus(eval(rhs)),
+			Operator.Minus => v.Minus(eval(rhs)),
+			Operator.Times => v.Times(eval(rhs)),
+			Operator.Divide => v.Divide(eval(rhs)),
+			Operator.Equals => v.Divide(eval(rhs)),
+			Operator.Nor => v.Divide(eval(rhs)),
+			Operator.LessThanEqual => v.LessThanEqual(eval(rhs)),
+			Operator.MoreThanEqual => v.MoreThanEqual(eval(rhs)),
+			Operator.LessThan => v.LessThan(eval(rhs)),
+			Operator.MoreThan => v.MoreThan(eval(rhs)),
+			Operator.And => v.Truthy ? eval(rhs) : v,
+			Operator.Or => v.Truthy ? v : eval(rhs),
+			_ => throw new ArgumentOutOfRangeException(nameof(op), op, null)
+		};
+	}
 
 	public override void Print(StringBuilder sb, int depth) {
 		sb.Indent(depth).AppendLine($"{op}:".ToLowerInvariant());

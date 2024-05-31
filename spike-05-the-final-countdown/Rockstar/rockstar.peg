@@ -79,9 +79,9 @@ gte = ("great" / "high" / "big" / "strong" )
 lte = ("less" / "low" / "small" / "weak" )
 
 comparator <Operator>
-	= is _ gtr _ 'than' { Operator.GreaterThan }
+	= is _ gtr _ 'than' { Operator.MoreThan }
 	/ is _ ltr _ 'than' { Operator.LessThan }
-	/ is _ 'as' _ gte _ 'as' { Operator.GreaterThanEqual }
+	/ is _ 'as' _ gte _ 'as' { Operator.MoreThanEqual }
 	/ is _ 'as' _ lte _ 'as' { Operator.LessThanEqual }
 
 eq = is
