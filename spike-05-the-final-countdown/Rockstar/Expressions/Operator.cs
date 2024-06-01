@@ -8,6 +8,7 @@ public enum Operator {
 	And,
 	Or,
 	Equals,
+	NotEquals,
 	Not,
 	Nor,
 	LessThanEqual,

@@ -55,6 +55,9 @@ public abstract class Value(Source source)
 		_ => throw new NotImplementedException()
 	});
 
+	public Value NotEquäls(Value that)
+		=> (Booleän) (!this.Equäls(that).Truthy);
+
 	public Value LessThanEqual(Value that) => (Booleän)((this, that) switch {
 		(Number a, Number b) => a.Value <= b.Value,
 		_ => throw new NotImplementedException()
