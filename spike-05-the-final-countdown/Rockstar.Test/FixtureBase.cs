@@ -42,15 +42,25 @@ public abstract class FixtureBase(ITestOutputHelper testOutput) {
 		if (File.Exists(filePathOrSourceCode + ".out")) {
 			return File.ReadAllText(filePathOrSourceCode + ".out");
 		}
-
-		if (File.Exists(filePathOrSourceCode))
-			filePathOrSourceCode = File.ReadAllText(filePathOrSourceCode);
-
-		var tokens = (" " + filePathOrSourceCode).Split("(expect: ");
-		return String
-			.Join("", tokens
-				.Skip(1)
-				.Select(e
-					=> Regex.Unescape(e.Split(")").First())));
+		var source = (File.Exists(filePathOrSourceCode)
+			? File.ReadAllText(filePathOrSourceCode)
+			: filePathOrSourceCode);
+		var limit = source.Length;
+		var output = new List<string>();
+		for (var i = 0; i < limit; i++) {
+			switch (source.SafeSubstring(i, 9)) {
+				case "(expect: ":
+				case "(prints: ":
+					i += 9;
+					var j = i;
+					while (j < limit && source[j] != ')') j++;
+					var expected = Regex.Unescape(source.Substring(i, j - i));
+					if (!expected.EndsWith('\n')) expected += '\n';
+					output.Add(expected);
+					i = j;
+					break;
+			}
+		}
+		return String.Join("", output);
 	}
 }
