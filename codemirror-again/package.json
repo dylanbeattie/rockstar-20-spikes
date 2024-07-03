@@ -3,13 +3,14 @@
 	"version": "0.1.0",
 	"description": "Rockstar language support for CodeMirror",
 	"dependencies": {
+		"@codemirror/autocomplete": "^6.17.0",
 		"@codemirror/lang-javascript": "^6.2.2",
-		"@rollup/plugin-node-resolve": "^15.2.3",
-		"codemirror": "^6.0.1",
-		"rollup": "^4.18.0",
 		"@codemirror/language": "^6.0.0",
 		"@lezer/highlight": "^1.0.0",
-		"@lezer/lr": "^1.0.0"
+		"@lezer/lr": "^1.0.0",
+		"@rollup/plugin-node-resolve": "^15.2.3",
+		"codemirror": "^6.0.1",
+		"rollup": "^4.18.0"
 	},
 	"devDependencies": {
 		"@lezer/generator": "^1.0.0",

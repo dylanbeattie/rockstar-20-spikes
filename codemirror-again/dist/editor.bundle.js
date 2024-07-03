@@ -26011,7 +26011,7 @@
      tokenPrec: 0
    });
 
-   // import { completeFromList } from "@codemirror/autocomplete"
+   // import { parser } from "./parser.js"
 
    let parserWithMetadata = parser.configure({
    	props: [
@@ -26038,19 +26038,19 @@
    	}
    });
 
-   // export const exampleCompletion = exampleLanguage.data.of({
-   // 	autocomplete: completeFromList([
-   // 		{ label: "defun", type: "keyword" },
-   // 		{ label: "defvar", type: "keyword" },
-   // 		{ label: "let", type: "keyword" },
-   // 		{ label: "cons", type: "function" },
-   // 		{ label: "car", type: "function" },
-   // 		{ label: "cdr", type: "function" }
-   // 	])
-   // })
+   const dylanTestKeywords = RockstarLanguage.data.of({
+   	autocomplete: completeFromList([
+   		{ label: "defun", type: "keyword" },
+   		{ label: "defvar", type: "keyword" },
+   		{ label: "let", type: "keyword" },
+   		{ label: "cons", type: "function" },
+   		{ label: "car", type: "function" },
+   		{ label: "cdr", type: "function" }
+   	])
+   });
 
    function Rockstar() {
-   	return new LanguageSupport(RockstarLanguage)
+   	return new LanguageSupport(RockstarLanguage, [dylanTestKeywords])
    }
 
    new EditorView({

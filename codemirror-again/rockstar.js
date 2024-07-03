@@ -1,7 +1,8 @@
-import { parser } from "./parser.js"
+// import { parser } from "./parser.js"
+import { parser } from "example.grammar"
 import { LRLanguage, LanguageSupport, foldNodeProp, foldInside, indentNodeProp } from "@codemirror/language"
 import { styleTags, tags as t } from "@lezer/highlight"
-// import { completeFromList } from "@codemirror/autocomplete"
+import { completeFromList } from "@codemirror/autocomplete"
 
 let parserWithMetadata = parser.configure({
 	props: [
@@ -28,17 +29,17 @@ export const RockstarLanguage = LRLanguage.define({
 	}
 })
 
-// export const exampleCompletion = exampleLanguage.data.of({
-// 	autocomplete: completeFromList([
-// 		{ label: "defun", type: "keyword" },
-// 		{ label: "defvar", type: "keyword" },
-// 		{ label: "let", type: "keyword" },
-// 		{ label: "cons", type: "function" },
-// 		{ label: "car", type: "function" },
-// 		{ label: "cdr", type: "function" }
-// 	])
-// })
+const dylanTestKeywords = RockstarLanguage.data.of({
+	autocomplete: completeFromList([
+		{ label: "defun", type: "keyword" },
+		{ label: "defvar", type: "keyword" },
+		{ label: "let", type: "keyword" },
+		{ label: "cons", type: "function" },
+		{ label: "car", type: "function" },
+		{ label: "cdr", type: "function" }
+	])
+});
 
 export function Rockstar() {
-	return new LanguageSupport(RockstarLanguage)
+	return new LanguageSupport(RockstarLanguage, [dylanTestKeywords])
 }

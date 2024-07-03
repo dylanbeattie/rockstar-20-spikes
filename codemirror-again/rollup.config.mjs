@@ -12,6 +12,6 @@ export default [
 			file: "./dist/editor.bundle.js",
 			format: "iife"
 		},
-		plugins: [nodeResolve()]
+		plugins: [lezer(), nodeResolve()]
 	}
 ]
