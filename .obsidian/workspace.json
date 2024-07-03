@@ -165,6 +165,7 @@
   },
   "active": "ec827b4da1bb8723",
   "lastOpenFiles": [
+    "codemirror-again/rockstar.js",
     "javascript.grammar",
     "javascript.grammar.crdownload",
     "codemirror-again/parser.terms.js",
@@ -175,7 +176,6 @@
     "codemirror-again/_tmp_48480_d2b082cf3c85a2f97ff3fe9955d761cf",
     "codemirror-again/dist/editor.bundle.js",
     "codemirror-again/dist/index.html",
-    "codemirror-again/dist",
     "lang-example-main/README.md",
     "codemirror-experiments/node_modules/estree-walker/README.md",
     "codemirror-experiments/node_modules/function-bind/README.md",

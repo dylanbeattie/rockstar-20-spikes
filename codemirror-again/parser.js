@@ -2,14 +2,14 @@
 import {LRParser} from "@lezer/lr"
 export const parser = LRParser.deserialize({
   version: 14,
-  states: "hOVQPOOOOQO'#C`'#C`QVQPOOOOQO-E6^-E6^",
-  stateData: "_~OVOS~OQPORPO~O",
-  goto: "[TPPPPUQQORRQ",
-  nodeNames: "⚠ File ProperNoun CommonNoun",
-  maxTerm: 7,
+  states: "hOVQPOOOOQO'#Cb'#CbQVQPOOOOQO-E6`-E6`",
+  stateData: "e~OXOS~OQPORPOSPOTPO~O",
+  goto: "^VPPPPPPWQQORRQ",
+  nodeNames: "⚠ File Keyword Boolean String LineComment",
+  maxTerm: 9,
   skippedNodes: [0],
   repeatNodeCount: 1,
-  tokenData: "#S~R[X^wpqw!c!}!l#T#o!z#y#zw$f$gw#BY#BZw$IS$I_w$I|$JOw$JT$JUw$KV$KWw&FU&FVw~|YV~X^wpqw#y#zw$f$gw#BY#BZw$IS$I_w$I|$JOw$JT$JUw$KV$KWw&FU&FVw~!oP#T#o!r~!wPQ~#T#o!r~#PPR~#T#o!z",
+  tokenData: "$c~R^X^}pq}!P!Q!r!Q![#y!c!}$R#T#o$Z#y#z}$f$g}#BY#BZ}$IS$I_}$I|$JO}$JT$JU}$KV$KW}&FU&FV}~!SYX~X^}pq}#y#z}$f$g}#BY#BZ}$IS$I_}$I|$JO}$JT$JU}$KV$KW}&FU&FV}~!uP!P!Q!x~!{P#V#W#O~#RP#c#d#U~#XP#a#b#[~#_P#a#b#b~#eP#X#Y#h~#kP#b#c#n~#qP#h#i#t~#yOT~~$OPS~!Q![#y~$WPQ~!c!}$R~$`PR~#T#o$Z",
   tokenizers: [0],
   topRules: {"File":[0,1]},
   tokenPrec: 0

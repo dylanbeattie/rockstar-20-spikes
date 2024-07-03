@@ -1,10 +1,12 @@
-@top File { (ProperNoun | CommonNoun)+ }
+@top File { (Keyword | Boolean | String | LineComment )+ }
 @skip { space }
 
 @tokens {
    space { @whitespace+ }
-   ProperNoun { $[A-Z] CommonNoun }
-   CommonNoun { $[a-z]+ }
+   LineComment { "//comment" }
+   Keyword { $[A-Z]+  }
+   Boolean { $[a-z]+ }
+   String { $[0-9]+ }
 }
 
 // @top File { (Identifier | Number | String)+ }
