@@ -1,8 +1,18 @@
 {
+	"name": "rockstar-parser",
+	"version": "0.1.0",
+	"type": "module",
+	"devDependencies": {
+		"@lezer/generator": "^1.0.0",
+		"rollup": "^3.29.4"
+	},
 	"dependencies": {
 		"@codemirror/lang-javascript": "^6.2.2",
 		"@rollup/plugin-node-resolve": "^15.2.3",
 		"codemirror": "^6.0.1",
 		"rollup": "^4.18.0"
+	},
+	"scripts": {
+		"prepare": "rollup -c"
 	}
 }

@@ -1,0 +1,19 @@
+@top File { (ProperNoun | CommonNoun)+ }
+@skip { space }
+
+@tokens {
+   space { @whitespace+ }
+   ProperNoun { $[A-Z] CommonNoun }
+   CommonNoun { $[a-z]+ }
+}
+
+// @top File { (Identifier | Number | String)+ }
+//
+// @skip { space }
+//
+// @tokens {
+//   space { @whitespace+ }
+//   Identifier { $[A-Za-z_]+ }
+//   Number { $[0-9]+ }
+//   String { '"' !["]* '"' }
+// }

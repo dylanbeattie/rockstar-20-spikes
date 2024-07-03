@@ -1,7 +1,7 @@
 import {EditorView, basicSetup} from "codemirror"
-import {Rockstar} from "./rockstar.js"
+import {javascript} from "@codemirror/lang-javascript"
 
 let editor = new EditorView({
-  extensions: [basicSetup, Rockstar()],
+  extensions: [basicSetup, javascript()],
   parent: document.body
 })
