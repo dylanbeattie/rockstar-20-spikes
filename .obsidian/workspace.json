@@ -11,8 +11,28 @@
             "id": "ec827b4da1bb8723",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "143d6495d3d501ab",
+            "type": "leaf",
+            "state": {
+              "type": "kanban",
+              "state": {
+                "file": "Untitled Kanban.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": [
+                    false
+                  ]
+                }
+              }
             }
           }
         ]
@@ -81,6 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +140,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "README.md"
+              }
             }
           }
         ]
@@ -135,9 +159,38 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "obsidian-kanban:Create new board": false
     }
   },
   "active": "ec827b4da1bb8723",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "codemirror-experiments/node_modules/@rollup",
+    "codemirror-experiments/_tmp_22468_eda4f408074cbe3ec03c00c1e3dfdd95",
+    "codemirror-experiments/package.json",
+    "codemirror-experiments/pnpm-lock.yaml",
+    "codemirror-experiments/node_modules/@codemirror",
+    "codemirror-experiments/node_modules",
+    "codemirror-experiments/_tmp_17488_b1139f3b98164641a8900d086ba256d7",
+    "codemirror-experiments/node_modules/supports-preserve-symlinks-flag/test/index.js",
+    "codemirror-experiments/node_modules/supports-preserve-symlinks-flag/test",
+    "codemirror-experiments/node_modules/resolve/bin/resolve",
+    "codemirror-experiments/node_modules/resolve/bin",
+    "codemirror-experiments/node_modules/estree-walker/README.md",
+    "codemirror-experiments/node_modules/function-bind/README.md",
+    "codemirror-experiments/node_modules/picomatch/CHANGELOG.md",
+    "codemirror-experiments/node_modules/is-core-module/README.md",
+    "codemirror-experiments/node_modules/@types/resolve/README.md",
+    "codemirror-experiments/node_modules/@types/estree/README.md",
+    "codemirror-experiments/node_modules/@codemirror/commands/CHANGELOG.md",
+    "codemirror-experiments/node_modules/@codemirror/autocomplete/README.md",
+    "codemirror-experiments/node_modules/@codemirror/autocomplete/CHANGELOG.md",
+    "codemirror-experiments/node_modules/@codemirror/view/README.md",
+    "codemirror-experiments/node_modules/@codemirror/view/CHANGELOG.md",
+    "codemirror-experiments/node_modules/style-mod/src/README.md",
+    "lezer-codemirror-spike/node_modules/@lezer/common/README.md",
+    "Untitled Kanban.md",
+    "README.md",
+    "Untitled.md"
+  ]
 }

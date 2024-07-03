@@ -1,5 +1,26 @@
 # rockstar-20-spikes
+
+### Rockstar 2.0 Roadmap
+
+* Interpreter built in C#
+	* native Windows executable
+		* on Chocolatey? NuGet? Windows App Store?
+	* native macOS executable (on Homebrew?)
+    - native Linux executable (on Flatpak? https://flatpak.org/)
+        - native compilation, tree pruning
+- WASM compilation via Blazor
+- CodeMirror web-based editor
+	- with syntax highlighting
+		- ... lezer grammar
+			- ..can I use the same file to generator the rockstar.peg AND the lezer grammar?
+- Abstract syntax tree visualisation
+- ...Rockstar Hall of Fame
+- Github sponsorship?
+
+
 Spikes and experiments for Rockstar 2.0
+
+
 
 ##### OK, this is where we got to after spike 2.0:
 
