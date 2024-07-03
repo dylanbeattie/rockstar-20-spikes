@@ -26,9 +26,18 @@ statement <Statement>
 	/ assign_stmt
 
 assign_stmt <Statement>
-	= 'let' _ v:variable _ 'be' _ e:expression { new Assign(v, e, state.Source()) }
-	/ v:variable _ 'says' _ s:("" .*) EOL { new Assign(v, new Strïng(s, state.Source(s)), state.Source()) }
-	/ v:variable _assign _ e:expression { new Assign(v, e, state.Source()) }
+	= 'let' _ v:variable _ 'be' _ e:expression
+		{ new Assign(v, e, state.Source()) }
+	/ v:variable _ 'says' _ s:("" .*) EOL
+		{ new Assign(v, new Strïng(s, state.Source(s)), state.Source()) }
+	/ v:variable _ "was a lovestruck ladykiller"
+		{ new Assign(v, new Number(100), state.Source()) }
+	/ v:variable _is _ l:literal
+		{ new Assign(v, l, state.Source()) }
+
+	//TODO: reinstate for 2.0
+	// v:variable _is _ e:expression { new Assign(v, e, state.Source()) }
+
 
 output_stmt  <Statement>
 	= output _ e:expression { new Output(e, state.Source()) }
@@ -119,9 +128,6 @@ _eq
 	= _is_not
 	/ _is
 
-_assign
-	= _is
-
 _is <Operator>
 	= ("'s" / "'re" / _ ('=' / 'is' / 'was' / 'are' / 'were')) !letter
 		{ Operator.Equals }
@@ -156,7 +162,41 @@ lookup <Expression>
 literal <Expression>
 	= constant
 	/ number
-	/ string	
+	/ string
+	/ poetic_number
+
+poetic_number <Number>
+	= poetic_digit_separator*
+		n:poetic_digits
+		poetic_digit_separator*
+		d:poetic_decimal?
+		poetic_digit_separator*
+  { new Number(Decimal.Parse(n)) }
+
+poetic_decimal <String>
+	= '.' poetic_decimal_digit_separator* d:poetic_decimal_digits poetic_decimal_digit_separator* { d }
+	/ '.' poetic_decimal_digit_separator*
+
+poetic_digit_separator = ( _ / [0-9\',;:?!+_/] )
+
+poetic_digits <String>
+	= poetic_digit_separator* head:poetic_digit poetic_digit_separator+ tail:poetic_digits
+		{ head + tail }
+	/ d: poetic_digit
+		{ d }
+
+poetic_decimal_digit_separator = ( _ / poetic_digit_separator / '.')
+
+poetic_decimal_digits <String>
+	= poetic_decimal_digit_separator* head:poetic_digit poetic_decimal_digit_separator+ tail:poetic_decimal_digits
+		{ head + tail }
+	/d:poetic_digit
+		{ d }
+
+poetic_digit <String>
+	= lexeme:("" [A-Za-z\-']+)
+		{ (lexeme.Replace("'", "").Length % 10).ToString() }
+
 
 constant <Expression>
 	= true
